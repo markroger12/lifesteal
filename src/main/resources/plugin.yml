@@ -1,0 +1,188 @@
+name: @name@
+version: '@version@'
+main: @main@
+api-version: '@apiVersion@'
+folia-supported: true
+description: A complete, premium-quality Lifesteal SMP system - hearts, elimination, revival beacons, heart items and more.
+website: @website@
+authors: [ LifeCore Team ]
+softdepend:
+  - PlaceholderAPI
+  - LuckPerms
+  - Vault
+  - CombatLogX
+  - DeluxeCombat
+  - PvPManager
+  - DecentHolograms
+
+commands:
+  lifesteal:
+    description: LifeCore main command.
+    usage: /<command> help
+    aliases: [ ls, lifecore ]
+    permission: lifecore.command
+
+permissions:
+  lifecore.*:
+    description: Every LifeCore permission.
+    default: op
+    children:
+      lifecore.player: true
+      lifecore.admin: true
+      lifecore.notify: true
+
+  lifecore.player:
+    description: Standard player permissions.
+    default: true
+    children:
+      lifecore.command: true
+      lifecore.help: true
+      lifecore.menu: true
+      lifecore.check: true
+      lifecore.check.others: true
+      lifecore.withdraw: true
+      lifecore.redeem: true
+      lifecore.revive: true
+      lifecore.top: true
+      lifecore.resourcepack: true
+
+  lifecore.command:
+    description: Use /lifesteal.
+    default: true
+  lifecore.help:
+    description: View /lifesteal help.
+    default: true
+  lifecore.menu:
+    description: Open the player menu.
+    default: true
+  lifecore.check:
+    description: Look up your own hearts and statistics.
+    default: true
+  lifecore.check.others:
+    description: Look up other players.
+    default: true
+  lifecore.withdraw:
+    description: Withdraw hearts into heart notes.
+    default: true
+  lifecore.redeem:
+    description: Redeem heart notes.
+    default: true
+  lifecore.revive:
+    description: Revive eliminated players by paying the configured cost.
+    default: true
+  lifecore.top:
+    description: View leaderboards.
+    default: true
+  lifecore.resourcepack:
+    description: Request the LifeCore resource pack.
+    default: true
+
+  lifecore.admin:
+    description: Every administrative permission.
+    default: op
+    children:
+      lifecore.admin.menu: true
+      lifecore.admin.sethearts: true
+      lifecore.admin.addhearts: true
+      lifecore.admin.removehearts: true
+      lifecore.admin.setmax: true
+      lifecore.admin.eliminate: true
+      lifecore.admin.revive: true
+      lifecore.admin.reset: true
+      lifecore.admin.reload: true
+      lifecore.admin.give: true
+      lifecore.admin.beacons: true
+      lifecore.admin.info: true
+      lifecore.admin.debug: true
+      lifecore.bypass.cooldown: true
+  lifecore.admin.menu:
+    description: Open the admin GUI.
+    default: op
+  lifecore.admin.sethearts:
+    description: Set a player's hearts.
+    default: op
+  lifecore.admin.addhearts:
+    description: Add hearts to a player.
+    default: op
+  lifecore.admin.removehearts:
+    description: Remove hearts from a player.
+    default: op
+  lifecore.admin.setmax:
+    description: Set a player's maximum hearts.
+    default: op
+  lifecore.admin.eliminate:
+    description: Eliminate a player.
+    default: op
+  lifecore.admin.revive:
+    description: Revive players for free (and choose the hearts restored).
+    default: op
+  lifecore.admin.reset:
+    description: Reset a player.
+    default: op
+  lifecore.admin.reload:
+    description: Reload the configuration.
+    default: op
+  lifecore.admin.give:
+    description: Give LifeCore items.
+    default: op
+  lifecore.admin.beacons:
+    description: Manage active revive beacons.
+    default: op
+  lifecore.admin.info:
+    description: View plugin information.
+    default: op
+  lifecore.admin.debug:
+    description: Toggle debug logging.
+    default: op
+
+  lifecore.notify:
+    description: Receive anti-exploit and security alerts.
+    default: op
+
+  lifecore.bypass:
+    description: Every bypass permission (not granted to operators by default).
+    default: false
+    children:
+      lifecore.bypass.loss: true
+      lifecore.bypass.antiexploit: true
+      lifecore.bypass.elimination: true
+      lifecore.bypass.ban: true
+      lifecore.bypass.combatlog: true
+      lifecore.bypass.cooldown: true
+  lifecore.bypass.loss:
+    description: Never lose hearts.
+    default: false
+  lifecore.bypass.antiexploit:
+    description: Kill rewards are never blocked by anti-exploit rules.
+    default: false
+  lifecore.bypass.elimination:
+    description: Cannot be eliminated and ignores eliminated-state restrictions.
+    default: false
+  lifecore.bypass.ban:
+    description: May join while elimination-banned (requires LuckPerms for the login check).
+    default: false
+  lifecore.bypass.combatlog:
+    description: Not killed for logging out in combat.
+    default: false
+  lifecore.bypass.cooldown:
+    description: Ignores the LifeCore command rate limit.
+    default: false
+
+  lifecore.heartcap.vip:
+    description: Heart cap tier "vip" (see config.yml hearts.permission-caps).
+    default: false
+  lifecore.heartcap.mvp:
+    description: Heart cap tier "mvp" (see config.yml hearts.permission-caps).
+    default: false
+  lifecore.gain.vip:
+    description: Heart gain multiplier "vip" (see config.yml hearts.gain-multipliers).
+    default: false
+  lifecore.loss.reduced:
+    description: Heart loss multiplier "protected" (see config.yml hearts.loss-multipliers).
+    default: false
+  lifecore.ban.vip:
+    description: Shorter elimination ban (see config.yml elimination.ban.durations).
+    default: false
+  lifecore.ban.mvp:
+    description: Shorter elimination ban (see config.yml elimination.ban.durations).
+    default: false

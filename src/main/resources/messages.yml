@@ -1,0 +1,470 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║                        LifeCore - Messages                            ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+#
+# Every message can be:
+#   key: "single line"                   -> chat
+#   key: ["line 1", "line 2"]            -> multi-line chat
+#   key:                                 -> any combination of:
+#     chat: "..." (or a list)
+#     actionbar: "..."
+#     title: "..."
+#     subtitle: "..."
+#     fade-in / stay / fade-out: ticks
+#     bossbar: { text: "...", color: RED, style: SOLID, seconds: 5 }
+#     sound: <id from sounds.yml>
+# Use "" (empty) to disable a message.
+#
+# Colours: &a &l ..., hex &#FF5555 / <#FF5555>, gradients <gradient:#FF0000:#FFAA00>text</gradient>
+# Start a chat line with <center> to centre it. PlaceholderAPI placeholders work everywhere.
+# {prefix} inserts the prefix below.
+config-version: 1
+
+prefix: "<gradient:#FF3B3B:#FF8A5B>&lLifeCore</gradient> &8» &7"
+
+time-units:
+  days: "d"
+  hours: "h"
+  minutes: "m"
+  seconds: "s"
+  permanent: "Permanent"
+  now: "now"
+
+# Symbols used by {hearts_bar} / %lifecore_hearts_bar%
+hearts-bar:
+  full: "&c❤"
+  half: "&#FF8A8A❥"
+  empty: "&8❤"
+  max-symbols: "20"
+
+status:
+  alive: "&aAlive"
+  eliminated: "&cEliminated"
+  banned: "&4Banned"
+
+general:
+  none: "None"
+  "yes": "&aYes"
+  "no": "&cNo"
+  never: "Never"
+  online: "&aOnline"
+  enabled: "&aenabled"
+  disabled: "&cdisabled"
+
+placeholders:
+  not-loaded: "-"
+
+# ─────────────────────────────────────────────────────────────────────────
+errors:
+  no-permission: "{prefix}&cYou don't have permission to do that."
+  player-only: "{prefix}&cOnly players can use this command."
+  unknown-command: "{prefix}&cUnknown sub-command. Use &f/{label} help&c."
+  usage: "{prefix}&cUsage: &f{usage}"
+  invalid-amount: "{prefix}&cInvalid amount &f{input}&c. Use a positive number (half hearts like 1.5 are allowed if enabled)."
+  invalid-number: "{prefix}&cInvalid number &f{input}&c (1-{max})."
+  invalid-player: "{prefix}&cInvalid player name &f{player}&c."
+  player-not-found: "{prefix}&cPlayer &f{player}&c has never played on this server."
+  player-offline: "{prefix}&cPlayer &f{player}&c must be online."
+  data-not-loaded: "{prefix}&cYour LifeCore data is not loaded. Please rejoin."
+  database-unavailable: "{prefix}&cThe database is temporarily unavailable. Please try again shortly."
+  internal: "{prefix}&cSomething went wrong. Staff have been informed through the console."
+  in-combat: "{prefix}&cYou can't do that while in combat."
+  slow-down: "{prefix}&cPlease slow down."
+  login-load-failed: "&c&lLifeCore\n\n&7Your data could not be loaded right now.\n&7Please try again in a moment."
+
+# ─────────────────────────────────────────────────────────────────────────
+help:
+  header:
+    - ""
+    - "<center><gradient:#FF3B3B:#FF8A5B>&l❤ LifeCore Help ❤</gradient> &8(&7{page}&8/&7{pages}&8)"
+    - ""
+  entry: " &8▪ &f{usage} &8- &7{description}"
+  footer:
+    - ""
+    - "<center>&7Next page: &f/{label} help {next}"
+  usage:
+    help: "/{label} help [page]"
+    menu: "/{label} menu"
+    check: "/{label} check [player] [gui]"
+    withdraw: "/{label} withdraw [hearts]"
+    redeem: "/{label} redeem"
+    revive: "/{label} revive <player> [hearts]"
+    top: "/{label} top [hearts|kills|deaths|revives]"
+    leaderboard: "/{label} leaderboard [type]"
+    resourcepack: "/{label} resourcepack"
+    admin: "/{label} admin [player]"
+    setheart: "/{label} setheart <player> <hearts>"
+    addheart: "/{label} addheart <player> <hearts>"
+    removeheart: "/{label} removeheart <player> <hearts>"
+    setmaxhearts: "/{label} setmaxhearts <player> <hearts|reset>"
+    eliminate: "/{label} eliminate <player>"
+    reset: "/{label} reset <player>"
+    give: "/{label} give <player> <item> [amount] | note <hearts>"
+    beacon: "/{label} beacon <list|menu|cancel <id> [refund]>"
+    reload: "/{label} reload"
+    info: "/{label} info"
+    debug: "/{label} debug"
+  descriptions:
+    help: "Show this help."
+    menu: "Open the LifeCore menu."
+    check: "View hearts, stats and status."
+    withdraw: "Turn hearts into a heart note."
+    redeem: "Redeem the heart note in your hand."
+    revive: "Revive an eliminated player."
+    top: "Show a leaderboard in chat."
+    leaderboard: "Open the leaderboard menu."
+    resourcepack: "Download the LifeCore resource pack."
+    admin: "Open the admin menu."
+    setheart: "Set a player's hearts."
+    addheart: "Give a player hearts."
+    removeheart: "Take hearts from a player."
+    setmaxhearts: "Set a player's maximum hearts."
+    eliminate: "Eliminate a player."
+    reset: "Reset a player."
+    give: "Give LifeCore items."
+    beacon: "Manage active revive beacons."
+    reload: "Reload the configuration."
+    info: "Plugin and integration status."
+    debug: "Toggle debug logging."
+
+# ─────────────────────────────────────────────────────────────────────────
+hearts:
+  cap-enforced: "{prefix}&7Your hearts were lowered from &c{previous}❤ &7to your maximum of &c{max}❤&7."
+
+kill:
+  killer:
+    chat: "{prefix}&7You stole &c{gained}❤ &7from &f{victim}&7. You now have &c{killer_hearts}❤&7."
+    actionbar: "&c+{gained}❤ &8| &7Killed &f{victim}"
+  killer-max:
+    chat: "{prefix}&7You killed &f{victim}&7 but you're at your maximum of &c{max}❤&7. Extra hearts dropped as items."
+    actionbar: "&6Maximum hearts reached!"
+  killer-item:
+    chat: "{prefix}&7You killed &f{victim}&7! Their heart &c({reward}❤)&7 dropped - pick it up!"
+    actionbar: "&cA heart dropped!"
+  killer-no-gain: "{prefix}&7You killed &f{victim}&7."
+  victim:
+    chat: "{prefix}&f{killer} &7stole &c{lost}❤ &7from you. You have &c{victim_hearts}❤ &7left."
+    title: "&c-{lost}❤"
+    subtitle: "&7Killed by &f{killer}"
+    fade-in: 5
+    stay: 40
+    fade-out: 10
+  victim-no-loss: "{prefix}&7You were killed by &f{killer}&7 but lost no hearts."
+  blocked:
+    chat: "{prefix}&cNo hearts gained: &7{reason}"
+    actionbar: "&cKill reward blocked: &7{reason}"
+  broadcast: "{prefix}&f{killer} &7stole &c{lost}❤ &7from &f{victim}&7!"
+
+death:
+  natural:
+    chat: "{prefix}&7You died to &f{cause}&7 and lost &c{lost}❤&7. You have &c{hearts}❤ &7left."
+    actionbar: "&c-{lost}❤ &8| &7{cause}"
+
+# Friendly names for death causes (unlisted mobs are prettified automatically).
+death-causes:
+  PLAYER: "a player"
+  ENTITY: "a mob"
+  FALL: "fall damage"
+  DROWNING: "drowning"
+  FIRE: "fire"
+  LAVA: "lava"
+  VOID: "the void"
+  EXPLOSION: "an explosion"
+  PROJECTILE: "a projectile"
+  SUFFOCATION: "suffocation"
+  LIGHTNING: "lightning"
+  STARVATION: "starvation"
+  FREEZE: "freezing"
+  MAGIC: "magic"
+  WITHER_EFFECT: "withering"
+  CONTACT: "a sharp block"
+  CRAMMING: "cramming"
+  FLY_INTO_WALL: "kinetic energy"
+  DRAGON_BREATH: "dragon breath"
+  SONIC_BOOM: "a sonic boom"
+  KILL_COMMAND: "a command"
+  OTHER: "unknown causes"
+  ADMIN: "an administrator"
+  SACRIFICE: "a sacrifice"
+  BLAZE: "a Blaze"
+  GHAST: "a Ghast"
+  WARDEN: "the Warden"
+  WITHER: "the Wither"
+  ENDER_DRAGON: "the Ender Dragon"
+  ZOMBIE: "a Zombie"
+  SKELETON: "a Skeleton"
+  CREEPER: "a Creeper"
+  SPIDER: "a Spider"
+  ENDERMAN: "an Enderman"
+
+anti-exploit:
+  reasons:
+    same-ip: "same IP address"
+    alt-account: "possible alt account"
+    repeated-kill: "you killed this player recently ({remaining} left)"
+    rapid-kills: "too many kills in a short time"
+  staff-alert: "&8[&cAnti-Exploit&8] &f{killer} &7killed &f{victim}&7 - reward blocked (&c{reason}&7)."
+
+# ─────────────────────────────────────────────────────────────────────────
+elimination:
+  eliminated:
+    chat:
+      - ""
+      - "<center>&4&l☠ YOU HAVE BEEN ELIMINATED ☠"
+      - "<center>&7You ran out of hearts (&f{cause}&7)."
+      - ""
+    title: "&4&lELIMINATED"
+    subtitle: "&7You ran out of hearts"
+    fade-in: 10
+    stay: 80
+    fade-out: 20
+  broadcast:
+    chat: "{prefix}&4☠ &f{player} &7has been &celiminated&7! &8({cause})"
+    bossbar:
+      text: "&4☠ &f{player} &chas been eliminated"
+      color: RED
+      style: SOLID
+      seconds: 6
+  kick: "&4&lELIMINATED\n\n&7You ran out of hearts.\n&7Cause: &f{cause}\n\n&7Ban: &f{ban_time}"
+  locked: "&4&lELIMINATED\n\n&7You are out of hearts.\n&7Ask a friend to revive you with a &bRevive Beacon&7!"
+  ban-screen: "&4&lELIMINATED\n\n&7You ran out of hearts.\n&7Cause: &f{cause}\n\n&7You can rejoin in &c{time}&7.\n&7A friend can revive you sooner with a &bRevive Beacon&7."
+  spectating:
+    chat: "{prefix}&cYou are eliminated. &7You are spectating until someone revives you."
+    actionbar: "&c☠ Eliminated &8- &7waiting for a revive"
+  command-blocked: "{prefix}&cYou can't use that command while eliminated."
+  teleport-blocked: "{prefix}&cEliminated players can't teleport to others."
+  chat-blocked: "{prefix}&cEliminated players can't chat."
+
+# ─────────────────────────────────────────────────────────────────────────
+revive:
+  revived:
+    chat: "{prefix}&aYou have been revived by &f{reviver}&a! You have &c{hearts}❤&a."
+    title: "&a&lREVIVED"
+    subtitle: "&7Welcome back! &c{hearts}❤"
+    fade-in: 10
+    stay: 60
+    fade-out: 20
+  broadcast: "{prefix}&a✚ &f{player} &7has been &arevived &7by &f{reviver}&7! &8({source})"
+  success: "{prefix}&aRevived &f{player}&a."
+  player-success: "{prefix}&aYou revived &f{target}&a for &c{cost}❤&a!"
+  not-eliminated: "{prefix}&f{player}&c is not eliminated."
+  cancelled: "{prefix}&cThe revival was cancelled."
+  cooldown: "{prefix}&cYou can revive another player in &f{cooldown}&c."
+  not-enough-hearts: "{prefix}&cReviving costs &f{cost}❤&c and you must keep at least &f{minimum}❤&c."
+  not-enough-money: "{prefix}&cReviving costs &f{money}&c."
+  economy-missing: "{prefix}&cRevives cost money but no economy plugin is available. Ask an administrator."
+  player-disabled: "{prefix}&cPlayers can't revive others on this server."
+  in-progress: "{prefix}&cThat player is already being revived."
+  self: "{prefix}&cYou can't revive yourself."
+  sources:
+    admin: "admin"
+    player: "player"
+    menu: "revive menu"
+    beacon: "revive beacon"
+    ban_expired: "ban expired"
+    api: "plugin"
+
+# ─────────────────────────────────────────────────────────────────────────
+withdraw:
+  disabled: "{prefix}&cHeart withdrawal is disabled."
+  invalid-amount: "{prefix}&cYou can withdraw between &f{min}❤ &cand &f{max}❤&c."
+  not-enough-hearts: "{prefix}&cYou must keep at least &f{minimum}❤ &cafter withdrawing."
+  inventory-full: "{prefix}&cYour inventory is full."
+  cooldown: "{prefix}&cPlease wait &f{time}&c before withdrawing again."
+  failed: "{prefix}&cCould not withdraw hearts."
+  success:
+    chat: "{prefix}&7Withdrew &c{amount}❤&7 into a heart note. You have &c{hearts}❤ &7left."
+    actionbar: "&c-{amount}❤ &8→ &fHeart Note"
+
+redeem:
+  disabled: "{prefix}&cRedeeming heart notes is disabled."
+  not-a-note: "{prefix}&cHold a heart note in your main hand."
+  at-max: "{prefix}&cYou already have your maximum of &f{max}❤&c."
+  exceeds-max: "{prefix}&cThis note (&f{amount}❤&c) would exceed your maximum of &f{max}❤&c."
+  duplicate: "{prefix}&cThis heart note has already been redeemed. Duplicated notes are worthless."
+  success:
+    chat: "{prefix}&7Redeemed &c{amount}❤&7. You now have &c{hearts}❤&7."
+    actionbar: "&a+{amount}❤"
+  partial:
+    chat: "{prefix}&7Redeemed &c{amount}❤&7 (your maximum). A note with the remaining &c{remainder}❤&7 was returned."
+    actionbar: "&a+{amount}❤ &8| &7returned &c{remainder}❤"
+
+items:
+  unknown: "{prefix}&cUnknown LifeCore item &f{id}&c."
+  disabled-world: "{prefix}&cLifeCore items can't be used in this world."
+  creative-blocked: "{prefix}&cLifeCore items can't be used in creative mode."
+  eliminated: "{prefix}&cYou can't do that while eliminated."
+  cooldown: "{prefix}&cWait &f{time}&c before using that again."
+  dropped-full-inventory: "{prefix}&7Your inventory was full - the item was dropped at your feet."
+  received: "{prefix}&7You received &f{amount}x {item}&7."
+  cannot-eat: ""
+
+heart-item:
+  at-max: "{prefix}&cYou already have your maximum of &f{max}❤&c."
+  at-max-absorption: "{prefix}&7You're at your maximum hearts - gained &6absorption &7instead."
+  at-max-commands: "{prefix}&7You're at your maximum hearts - the heart's power was converted."
+  at-max-consumed: "{prefix}&7You're at your maximum hearts. The heart crumbles to dust."
+  used:
+    chat: "{prefix}&7You consumed a heart: &c+{gained}❤&7. You now have &c{total}❤&7."
+    actionbar: "&c+{gained}❤"
+  used-capped:
+    chat: "{prefix}&7You consumed a heart: &c+{gained}❤&7 (maximum reached)."
+    actionbar: "&c+{gained}❤ &8(&6max&8)"
+
+scroll:
+  not-enough-hearts: "{prefix}&cThis scroll costs &f{cost}❤&c and you must keep at least &f{minimum}❤&c."
+  used:
+    chat: "{prefix}&7You sacrificed &c{cost}❤&7 for &d{effects}&7 ({duration}s). &c{hearts}❤ &7left."
+    title: "&4&lSACRIFICE"
+    subtitle: "&c-{cost}❤ &8| &d{duration}s of power"
+    fade-in: 5
+    stay: 40
+    fade-out: 10
+
+heart-drop:
+  dropped: "{prefix}&7A &cheart &7dropped from your victim!"
+  received: "{prefix}&7You received a &cheart &7from your kill!"
+
+security:
+  staff-alert: "&8[&cSecurity&8] &f{player} &7used an invalid LifeCore item (&c{reason}&7)."
+  item-confiscated: "{prefix}&cThat item is not a genuine LifeCore item and was removed."
+  item-invalid: "{prefix}&cThat item is not a genuine LifeCore item."
+  duplicate-note-alert: "&8[&cSecurity&8] &f{player} &7tried to redeem an already used heart note &8({note})&7."
+  duplicate-beacon-alert: "&8[&cSecurity&8] &f{player} &7placed a duplicated revive beacon &8({item})&7."
+
+combat:
+  logged-out: "{prefix}&f{player} &7logged out during combat and was killed."
+
+# ─────────────────────────────────────────────────────────────────────────
+beacon:
+  disabled: "{prefix}&cRevive beacons are disabled."
+  disabled-world: "{prefix}&cRevive beacons can't be used in this world."
+  max-active: "{prefix}&cYou can only run &f{max}&c revive beacon(s) at a time."
+  cooldown: "{prefix}&cYou can place this beacon again in &f{time}&c."
+  already-selecting: "{prefix}&cFinish choosing a player for your other beacon first."
+  location-occupied: "{prefix}&cA beacon can't be placed there."
+  no-eliminated: "{prefix}&7There is nobody to revive right now - your beacon was returned."
+  selection-cancelled: "{prefix}&7Beacon placement cancelled."
+  tier-removed: "{prefix}&cThis beacon type no longer exists."
+  target-taken: "{prefix}&f{target}&c is already being revived by another beacon."
+  duplicate: "{prefix}&cThis revive beacon was already used. Duplicated beacons are worthless."
+  started:
+    chat: "{prefix}&7Your {tier}&7 beacon is reviving &f{target}&7. Defend it for &e{time}&7!"
+    title: "&b&lRITUAL STARTED"
+    subtitle: "&7Reviving &f{target} &8| &e{time}"
+  broadcast-start: "{prefix}&b✦ &f{owner} &7started reviving &f{target}&7 with a {tier}&7 beacon at &f{x} {y} {z}&7!"
+  broadcast-complete: "{prefix}&a✦ &f{owner}&7's beacon revived &f{target}&7!"
+  broadcast-fail: "{prefix}&c✦ &f{owner}&7's beacon reviving &f{target}&7 was &cdestroyed&7!"
+  completed: "{prefix}&aYour beacon revived &f{target}&a!"
+  failed: "{prefix}&cYour beacon reviving &f{target}&c was destroyed."
+  cancelled: "{prefix}&cYour revive beacon for &f{target}&c was cancelled."
+  cancelled-by-admin: "{prefix}&cAn administrator cancelled your revive beacon for &f{target}&c."
+  owner-cancelled: "{prefix}&7You cancelled your revive beacon."
+  owner-cannot-cancel: "{prefix}&cRevive beacons can't be cancelled once started."
+  target-revived-elsewhere: "{prefix}&7The player you were reviving was revived another way - your beacon was returned."
+  target-not-eliminated: "{prefix}&7The target is no longer eliminated - your beacon was returned."
+  damaged:
+    chat: "{prefix}&cYour beacon is under attack by &f{attacker}&c! &7Durability: {durability_color}{durability}%"
+    actionbar: "&c⚠ Beacon under attack! {durability_color}{durability}%"
+  damaged-attacker:
+    actionbar: "&7Beacon durability: {durability_color}{durability}%"
+  explosion: "an explosion"
+  status: "{prefix}&7Reviving &f{target}&7 &8| &e{time} &8| &7Durability {durability_color}{durability}% &8| &7Owner &f{owner}"
+  status-active: "&aActive"
+  status-paused: "&cPaused - owner too far away"
+  list-header: "{prefix}&7Active revive beacons: &f{count}"
+  list-entry: " &8▪ &f{id} &7{tier}&7: &f{owner} &8→ &f{target} &8| &e{time} &8| {durability_color}{durability}% &8| &7{location}"
+  not-found: "{prefix}&cNo active beacon matches &f{id}&c."
+  craft-one-at-a-time: "{prefix}&cRevive beacons must be crafted one at a time."
+
+# ─────────────────────────────────────────────────────────────────────────
+leaderboard:
+  disabled: "{prefix}&cLeaderboards are disabled."
+  unknown-type: "{prefix}&cUnknown leaderboard &f{type}&c. Use hearts, kills, deaths or revives."
+  header:
+    - ""
+    - "<center><gradient:#FFD166:#FF8A5B>&l✦ Top {type} ✦</gradient>"
+    - ""
+  entry: " &6#{position} &f{name} &8- &c{value}"
+  footer: ""
+  no-entries: " &7No entries yet."
+  empty-name: "-"
+  empty-value: "0"
+  types:
+    hearts: "Hearts"
+    kills: "Kills"
+    deaths: "Deaths"
+    revives: "Revives"
+
+check:
+  output:
+    - ""
+    - "<center><gradient:#FF3B3B:#FF8A5B>&l❤ {player} ❤</gradient>"
+    - ""
+    - " &7Hearts: &c{hearts}❤ &8/ &c{max_hearts}❤ &8(min {min_hearts})"
+    - " &7{hearts_bar}"
+    - " &7Status: {status}"
+    - " &7Kills: &f{kills} &8| &7Deaths: &f{deaths} &8| &7K/D: &f{kdr}"
+    - " &7Kill streak: &f{killstreak} &8(best {best_killstreak})"
+    - " &7Revives performed: &f{revives} &8| &7Times revived: &f{times_revived}"
+    - " &7Eliminations: &f{eliminations} &8| &7Eliminated: {eliminated}"
+    - " &7Ban remaining: &f{ban_time}"
+    - " &7Last death: &f{last_death} &8({last_death_cause}, killer: {last_killer})"
+    - " &7Last revive: &f{revived_at} &8(by {revived_by})"
+    - " &7Revive beacon: &f{revive_time}"
+    - ""
+
+admin:
+  hearts-updated: "{prefix}&aUpdated &f{player}&a: &c{previous}❤ &8→ &c{hearts}❤&a."
+  hearts-capped: "{prefix}&eUpdated &f{player}&e: &c{previous}❤ &8→ &c{hearts}❤ &e(limited by their cap)."
+  hearts-unchanged: "{prefix}&7No change for &f{player}&7 (eliminated or cancelled by another plugin)."
+  hearts-eliminated: "{prefix}&c{player} &7reached 0 hearts and was &celiminated&7."
+  max-set: "{prefix}&aMaximum hearts of &f{player}&a is now &c{max}❤&a."
+  eliminated: "{prefix}&aEliminated &f{player}&a."
+  eliminate-failed: "{prefix}&c{player} could not be eliminated (already eliminated or protected)."
+  reset: "{prefix}&aReset &f{player}&a to &c{hearts}❤&a."
+  item-given: "{prefix}&aGave &f{amount}x {item}&a to &f{player}&a."
+  beacon-cancelled: "{prefix}&aCancelled the beacon reviving &f{target}&a."
+  beacon-world-missing: "{prefix}&cThat beacon's world is not loaded."
+  debug: "{prefix}&7Debug logging {state}&7."
+
+menus:
+  unavailable: "{prefix}&cThe menu &f{menu}&c is not configured."
+  cancelled: "{prefix}&7Cancelled."
+  confirm-revive: "Revive {target}"
+  confirm-eliminate: "Eliminate {player}"
+  confirm-reset: "Reset {player}"
+
+chat-input:
+  search-player: "{prefix}&7Type a player name in chat (or &fcancel&7)."
+  enter-hearts: "{prefix}&7Type the new heart amount in chat (or &fcancel&7)."
+  enter-max-hearts: "{prefix}&7Type the new maximum hearts in chat (or &fcancel&7)."
+  enter-note-hearts: "{prefix}&7Type the heart value of the note in chat (or &fcancel&7)."
+  timeout: "{prefix}&7Input timed out."
+  cancelled: "{prefix}&7Input cancelled."
+  cancel-word: "cancel"
+
+reload:
+  success: "{prefix}&aConfiguration reloaded in &f{time}ms&a (&f{warnings}&a warning(s))."
+  failed: "{prefix}&cReload failed: &f{error}&c. The previous configuration is still active."
+  warnings: "{prefix}&e{count} configuration problem(s) - see the console for details:"
+  warning-entry: " &8▪ &e{problem}"
+
+info:
+  output:
+    - ""
+    - "<center><gradient:#FF3B3B:#FF8A5B>&lLifeCore {version}</gradient>"
+    - ""
+    - " &7Server: &f{server}"
+    - " &7Scheduler: &f{scheduler}"
+    - " &7Storage: &f{storage} &8({storage_status}&8)"
+    - " &7Cached players: &f{cached} &8| &7Active beacons: &f{beacons}"
+    - " &7Integrations: &f{hooks}"
+    - " &7Debug: &f{debug}"
+    - ""
+  healthy: "&aconnected"
+  unhealthy: "&cunreachable"
+
+resource-pack:
+  prompt: "&7LifeCore uses custom textures for hearts, scrolls and beacons."
+  not-configured: "{prefix}&cNo resource pack URL is configured."

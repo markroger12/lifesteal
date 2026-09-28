@@ -1,0 +1,34 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/red_dye"
+    },
+    "entries": [
+      {
+        "threshold": 710001,
+        "model": {
+          "type": "minecraft:model",
+          "model": "lifecore:item/small_heart"
+        }
+      },
+      {
+        "threshold": 710002,
+        "model": {
+          "type": "minecraft:model",
+          "model": "lifecore:item/large_heart"
+        }
+      },
+      {
+        "threshold": 710003,
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/red_dye"
+        }
+      }
+    ]
+  }
+}

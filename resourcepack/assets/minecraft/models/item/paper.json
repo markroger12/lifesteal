@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/paper"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 710010
+      },
+      "model": "lifecore:item/heart_note"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 710020
+      },
+      "model": "lifecore:item/sacrificial_scroll"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 710021
+      },
+      "model": "lifecore:item/blood_pact"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 710022
+      },
+      "model": "lifecore:item/soul_contract"
+    }
+  ]
+}

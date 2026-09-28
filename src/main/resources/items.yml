@@ -1,0 +1,192 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║                     LifeCore - Heart Items & Notes                    ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+#
+# Item appearance keys (shared by items.yml, effects.yml and beacons.yml):
+#   material           Bukkit material name
+#   name / lore        text (colours: &a, &#RRGGBB, <gradient:#A:#B>text</gradient>)
+#   custom-model-data  integer used by resource packs (0 = none)
+#   item-model         1.21.4+ item model id, e.g. "lifecore:small_heart" (empty = none)
+#   glow               enchantment glint without visible enchantments
+#   enchantments       ["UNBREAKING:1", "sharpness:2"]
+#   flags              item flags such as HIDE_ENCHANTS, HIDE_ATTRIBUTES
+#
+# Recipes: type SHAPED (shape + ingredients) or SHAPELESS (ingredients list).
+# Ingredients are material names or other LifeCore items as "lifecore:<id>".
+#
+# Every LifeCore item is signed. Changing values here updates existing items
+# of the same id (heart amounts are read from this file when the item is used).
+config-version: 1
+
+heart-items:
+  small_heart:
+    enabled: true
+    # Hearts granted when used.
+    hearts: 1.0
+    # Seconds between uses of this item (0 = none).
+    cooldown: 2
+    # Permission required to use (empty = everyone).
+    permission: ""
+    # When the player is at their maximum hearts:
+    #   DENY       = the item cannot be used
+    #   CONSUME    = the item is consumed without effect
+    #   ABSORPTION = the item grants absorption hearts instead (absorption-seconds)
+    #   COMMANDS   = runs at-max-commands and consumes the item
+    at-max-hearts: DENY
+    absorption-seconds: 120
+    at-max-commands: []
+    # Console commands run after a successful use. {player} = player name.
+    commands: []
+    sound: heart-consume
+    particle: heart-consume
+    item:
+      material: RED_DYE
+      name: "<gradient:#FF4D4D:#FF8A8A>&lSmall Heart</gradient>"
+      lore:
+        - "&7A fragment of stolen life."
+        - ""
+        - "&8» &7Grants &c+{hearts}❤"
+        - ""
+        - "&#FFB3B3Right-click to consume"
+      custom-model-data: 710001
+      item-model: ""
+      glow: true
+      enchantments: []
+      flags:
+        - HIDE_ENCHANTS
+        - HIDE_ATTRIBUTES
+    # Chance to drop from a killed player (checked on rewarded kills).
+    drop:
+      enabled: false
+      chance: 10.0
+      amount: 1
+      # GROUND or INVENTORY
+      behavior: GROUND
+    recipe:
+      enabled: true
+      type: SHAPED
+      permission: ""
+      shape:
+        - "GDG"
+        - "DND"
+        - "GDG"
+      ingredients:
+        G: GOLD_BLOCK
+        D: DIAMOND
+        N: NETHERITE_SCRAP
+
+  large_heart:
+    enabled: true
+    hearts: 2.0
+    cooldown: 5
+    permission: ""
+    at-max-hearts: DENY
+    absorption-seconds: 180
+    at-max-commands: []
+    commands: []
+    sound: heart-consume
+    particle: heart-consume
+    item:
+      material: RED_DYE
+      name: "<gradient:#E0115F:#FF4D6D>&lLarge Heart</gradient>"
+      lore:
+        - "&7Pulsing with a stronger life force."
+        - ""
+        - "&8» &7Grants &c+{hearts}❤"
+        - ""
+        - "&#FF9EB5Right-click to consume"
+      custom-model-data: 710002
+      item-model: ""
+      glow: true
+      enchantments: []
+      flags:
+        - HIDE_ENCHANTS
+        - HIDE_ATTRIBUTES
+    drop:
+      enabled: false
+      chance: 3.0
+      amount: 1
+      behavior: GROUND
+    recipe:
+      enabled: true
+      type: SHAPED
+      permission: ""
+      shape:
+        - " S "
+        - "SES"
+        - " S "
+      ingredients:
+        S: "lifecore:small_heart"
+        E: ENCHANTED_GOLDEN_APPLE
+
+  legendary_heart:
+    enabled: true
+    hearts: 5.0
+    cooldown: 30
+    permission: ""
+    at-max-hearts: DENY
+    absorption-seconds: 300
+    at-max-commands: []
+    commands: []
+    sound: heart-consume
+    particle: heart-consume-legendary
+    item:
+      material: NETHER_STAR
+      name: "<gradient:#FFD700:#FF4500:#C71585>&lLegendary Heart</gradient>"
+      lore:
+        - "&7Forged from the lives of champions."
+        - ""
+        - "&8» &7Grants &6+{hearts}❤"
+        - ""
+        - "&#FFE08ARight-click to consume"
+      custom-model-data: 710003
+      item-model: ""
+      glow: true
+      enchantments: []
+      flags:
+        - HIDE_ENCHANTS
+        - HIDE_ATTRIBUTES
+    drop:
+      enabled: false
+      chance: 0.5
+      amount: 1
+      behavior: GROUND
+    recipe:
+      enabled: true
+      type: SHAPED
+      permission: ""
+      shape:
+        - "LNL"
+        - "NTN"
+        - "LNL"
+      ingredients:
+        L: "lifecore:large_heart"
+        N: NETHERITE_INGOT
+        T: TOTEM_OF_UNDYING
+
+# The physical note created by /lifesteal withdraw.
+# Placeholders: {hearts}, {owner}, {date}
+heart-note:
+  item:
+    material: PAPER
+    name: "<gradient:#FF5E62:#FF9966>&lHeart Note</gradient> &8(&c{hearts}❤&8)"
+    lore:
+      - "&7A contract worth &c{hearts}❤&7."
+      - ""
+      - "&8» &7Withdrawn by &f{owner}"
+      - "&8» &7Date: &f{date}"
+      - ""
+      - "&#FFB199Right-click to redeem"
+    custom-model-data: 710010
+    item-model: ""
+    glow: true
+    enchantments: []
+    flags:
+      - HIDE_ENCHANTS
+      - HIDE_ATTRIBUTES
+  # Date format for {date} (java.time pattern).
+  date-format: "yyyy-MM-dd HH:mm"
+  sound-withdraw: withdraw
+  sound-redeem: redeem
+  particle-withdraw: withdraw
+  particle-redeem: redeem

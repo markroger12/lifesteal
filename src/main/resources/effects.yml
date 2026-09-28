@@ -1,0 +1,309 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║              LifeCore - Particles & Sacrificial Items                 ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+config-version: 1
+
+# ─────────────────────────────────────────────────────────────────────────
+# Particle effects
+#   particle   Bukkit particle name (legacy names such as REDSTONE are accepted)
+#   count      particles per burst (keep this low on large servers)
+#   offset     random spread [x, y, z]
+#   speed      particle speed/extra value
+#   y-offset   height above the player's feet / block
+#   shape      POINT (one burst) or RING (points arranged in a circle)
+#   points     RING only: number of points
+#   radius     RING only: circle radius
+#   color      DUST / ENTITY_EFFECT only: "#RRGGBB"
+#   size       DUST only: particle size
+# ─────────────────────────────────────────────────────────────────────────
+particles:
+  # Global switch - disable to remove every LifeCore particle.
+  enabled: true
+  effects:
+    heart-gain:
+      enabled: true
+      particle: HEART
+      count: 6
+      offset: [0.4, 0.4, 0.4]
+      speed: 0.0
+      y-offset: 1.2
+      shape: POINT
+    heart-loss:
+      enabled: true
+      particle: DUST
+      color: "#8B0000"
+      size: 1.3
+      count: 14
+      offset: [0.35, 0.6, 0.35]
+      speed: 0.0
+      y-offset: 1.0
+      shape: POINT
+    elimination:
+      enabled: true
+      particle: SOUL
+      count: 1
+      offset: [0.05, 0.1, 0.05]
+      speed: 0.02
+      y-offset: 0.3
+      shape: RING
+      points: 20
+      radius: 1.2
+    revival:
+      enabled: true
+      particle: TOTEM_OF_UNDYING
+      count: 40
+      offset: [0.5, 1.0, 0.5]
+      speed: 0.3
+      y-offset: 1.0
+      shape: POINT
+    heart-consume:
+      enabled: true
+      particle: HEART
+      count: 8
+      offset: [0.5, 0.5, 0.5]
+      speed: 0.0
+      y-offset: 1.4
+      shape: POINT
+    heart-consume-legendary:
+      enabled: true
+      particle: TOTEM_OF_UNDYING
+      count: 30
+      offset: [0.4, 0.8, 0.4]
+      speed: 0.25
+      y-offset: 1.0
+      shape: POINT
+    scroll-consume:
+      enabled: true
+      particle: DUST
+      color: "#B0003A"
+      size: 1.0
+      count: 1
+      offset: [0.0, 0.0, 0.0]
+      speed: 0.0
+      y-offset: 0.2
+      shape: RING
+      points: 18
+      radius: 0.9
+    withdraw:
+      enabled: true
+      particle: DUST
+      color: "#FF5E62"
+      size: 1.0
+      count: 10
+      offset: [0.3, 0.3, 0.3]
+      speed: 0.0
+      y-offset: 1.2
+      shape: POINT
+    redeem:
+      enabled: true
+      particle: HEART
+      count: 5
+      offset: [0.4, 0.4, 0.4]
+      speed: 0.0
+      y-offset: 1.4
+      shape: POINT
+    beacon-basic:
+      enabled: true
+      particle: END_ROD
+      count: 1
+      offset: [0.0, 0.0, 0.0]
+      speed: 0.0
+      y-offset: 1.2
+      shape: RING
+      points: 8
+      radius: 0.9
+    beacon-advanced:
+      enabled: true
+      particle: ENCHANT
+      count: 2
+      offset: [0.0, 0.2, 0.0]
+      speed: 0.4
+      y-offset: 1.3
+      shape: RING
+      points: 10
+      radius: 1.0
+    beacon-ultimate:
+      enabled: true
+      particle: DUST
+      color: "#C71585"
+      size: 1.2
+      count: 1
+      offset: [0.0, 0.0, 0.0]
+      speed: 0.0
+      y-offset: 1.3
+      shape: RING
+      points: 14
+      radius: 1.2
+    beacon-complete:
+      enabled: true
+      particle: TOTEM_OF_UNDYING
+      count: 60
+      offset: [0.6, 1.2, 0.6]
+      speed: 0.35
+      y-offset: 1.2
+      shape: POINT
+    beacon-fail:
+      enabled: true
+      particle: LARGE_SMOKE
+      count: 25
+      offset: [0.4, 0.5, 0.4]
+      speed: 0.02
+      y-offset: 1.0
+      shape: POINT
+
+# ─────────────────────────────────────────────────────────────────────────
+# Sacrificial scrolls: sacrifice hearts for temporary potion effects.
+#   heart-cost          hearts removed on use
+#   effects             "EFFECT:LEVEL" (level 1 = I); duration applies to all
+#   duration            seconds
+#   allow-elimination   allow use even if it would eliminate the player
+#   messages.use        optional custom message (empty = messages.yml scroll-used)
+# ─────────────────────────────────────────────────────────────────────────
+scrolls:
+  sacrificial_scroll:
+    enabled: true
+    heart-cost: 2.0
+    duration: 60
+    effects:
+      - "STRENGTH:2"
+      - "SPEED:2"
+      - "REGENERATION:1"
+    cooldown: 180
+    permission: ""
+    allow-elimination: false
+    sound: scroll-consume
+    particle: scroll-consume
+    messages:
+      use: ""
+    commands: []
+    item:
+      material: PAPER
+      name: "<gradient:#8B0000:#FF3131>&lSacrificial Scroll</gradient>"
+      lore:
+        - "&7Trade your life for raw power."
+        - ""
+        - "&8» &7Cost: &c-{cost}❤"
+        - "&8» &7Duration: &f{duration}s"
+        - "{effects}"
+        - ""
+        - "&#FF7A7ARight-click to sacrifice"
+      custom-model-data: 710020
+      item-model: ""
+      glow: true
+      enchantments: []
+      flags:
+        - HIDE_ENCHANTS
+        - HIDE_ATTRIBUTES
+    recipe:
+      enabled: true
+      type: SHAPED
+      permission: ""
+      shape:
+        - " B "
+        - "RPR"
+        - " B "
+      ingredients:
+        B: BLAZE_POWDER
+        R: REDSTONE_BLOCK
+        P: PAPER
+
+  blood_pact:
+    enabled: true
+    heart-cost: 4.0
+    duration: 90
+    effects:
+      - "STRENGTH:3"
+      - "SPEED:2"
+      - "RESISTANCE:1"
+      - "FIRE_RESISTANCE:1"
+    cooldown: 300
+    permission: ""
+    allow-elimination: false
+    sound: scroll-consume
+    particle: scroll-consume
+    messages:
+      use: ""
+    commands: []
+    item:
+      material: PAPER
+      name: "<gradient:#4B0000:#D1001F>&lBlood Pact</gradient>"
+      lore:
+        - "&7Sealed in blood. Paid in hearts."
+        - ""
+        - "&8» &7Cost: &c-{cost}❤"
+        - "&8» &7Duration: &f{duration}s"
+        - "{effects}"
+        - ""
+        - "&#FF5C5CRight-click to sacrifice"
+      custom-model-data: 710021
+      item-model: ""
+      glow: true
+      enchantments: []
+      flags:
+        - HIDE_ENCHANTS
+        - HIDE_ATTRIBUTES
+    recipe:
+      enabled: true
+      type: SHAPED
+      permission: ""
+      shape:
+        - "NGN"
+        - "GSG"
+        - "NGN"
+      ingredients:
+        N: NETHER_WART_BLOCK
+        G: GHAST_TEAR
+        S: "lifecore:sacrificial_scroll"
+
+  soul_contract:
+    enabled: true
+    heart-cost: 6.0
+    duration: 120
+    effects:
+      - "STRENGTH:3"
+      - "SPEED:3"
+      - "RESISTANCE:2"
+      - "REGENERATION:2"
+      - "FIRE_RESISTANCE:1"
+    cooldown: 600
+    permission: ""
+    allow-elimination: false
+    sound: scroll-consume
+    particle: scroll-consume
+    messages:
+      use: ""
+    commands: []
+    item:
+      material: PAPER
+      name: "<gradient:#2E0249:#A91079:#F806CC>&lSoul Contract</gradient>"
+      lore:
+        - "&7An oath no mortal should sign."
+        - ""
+        - "&8» &7Cost: &c-{cost}❤"
+        - "&8» &7Duration: &f{duration}s"
+        - "{effects}"
+        - ""
+        - "&#E58EFFRight-click to sacrifice"
+      custom-model-data: 710022
+      item-model: ""
+      glow: true
+      enchantments: []
+      flags:
+        - HIDE_ENCHANTS
+        - HIDE_ATTRIBUTES
+    recipe:
+      enabled: true
+      type: SHAPED
+      permission: ""
+      shape:
+        - "EBE"
+        - "BNB"
+        - "EBE"
+      ingredients:
+        E: ECHO_SHARD
+        B: "lifecore:blood_pact"
+        N: NETHER_STAR
+
+# Format of each line produced for {effects} in scroll lore.
+# Placeholders: {effect} (pretty name), {level} (roman numeral)
+effect-lore-format: "&8» &d{effect} {level}"

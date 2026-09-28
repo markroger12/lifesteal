@@ -1,0 +1,391 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║                        LifeCore - Main Configuration                  ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+#
+# Heart values are HEARTS, not health points (1 heart = 2 health points).
+# Durations accept: 30s, 15m, 24h, 7d, 2w, combinations (1d12h) or plain seconds.
+# Related files: messages.yml, items.yml, beacons.yml, effects.yml, worlds.yml,
+#                sounds.yml, menus.yml, storage.yml
+#
+# Do not change config-version. LifeCore uses it to migrate your settings safely.
+config-version: 2
+
+general:
+  # Prints detailed diagnostics to the console. Leave off in production.
+  debug: false
+  # Locale used to format decimal numbers (e.g. en_US -> 10.5, de_DE -> 10,5).
+  number-locale: en_US
+
+# ─────────────────────────────────────────────────────────────────────────
+# Hearts
+# ─────────────────────────────────────────────────────────────────────────
+hearts:
+  # Hearts a brand-new player starts with.
+  starting: 10.0
+  # Lowest heart count a living player can have. Players reaching the
+  # elimination threshold (see below) are eliminated instead.
+  minimum: 1.0
+  # Default maximum hearts. Can be raised per player with permission caps
+  # or /lifesteal setmaxhearts.
+  maximum: 20.0
+  # Absolute limit no permission or command can exceed (Minecraft allows at most 512).
+  hard-limit: 100.0
+  # Allow half-heart precision (0.5). When false, all values are rounded to whole hearts.
+  half-hearts: true
+  # Heal the player by the amount of hearts they gain.
+  heal-on-gain: true
+  # Lower a player's hearts to their cap when they join (e.g. after losing a rank).
+  enforce-cap-on-join: true
+  # Permission based heart caps. The highest cap a player has permission for applies.
+  permission-caps:
+    enabled: true
+    # Also accept numeric permissions such as lifecore.heartcap.35
+    numeric-permissions: true
+    tiers:
+      vip:
+        permission: lifecore.heartcap.vip
+        maximum: 25.0
+      mvp:
+        permission: lifecore.heartcap.mvp
+        maximum: 30.0
+  # Permission based multipliers for hearts gained from kills (highest applies).
+  gain-multipliers:
+    vip:
+      permission: lifecore.gain.vip
+      multiplier: 1.5
+  # Permission based multipliers for hearts lost on death (lowest applies).
+  loss-multipliers:
+    protected:
+      permission: lifecore.loss.reduced
+      multiplier: 0.5
+
+# ─────────────────────────────────────────────────────────────────────────
+# Player kills
+# ─────────────────────────────────────────────────────────────────────────
+kill:
+  enabled: true
+  # Hearts the killer gains.
+  killer-gain: 1.0
+  # Hearts the victim loses (overridden by death.causes.PLAYER when
+  # death.heart-loss-by-death-cause is true and PLAYER is set).
+  victim-loss: 1.0
+  # FIXED  = killer always gains killer-gain
+  # STOLEN = killer gains exactly what the victim actually lost (no hearts created from nothing)
+  gain-mode: FIXED
+  # DIRECT = hearts are added to the killer immediately
+  # ITEM   = a heart item (reward-item) drops at the victim's location instead
+  reward-mode: DIRECT
+  reward-item: small_heart
+  # What happens to hearts a killer cannot receive because they are at their cap.
+  # NOTHING   = the hearts are lost
+  # DROP_ITEM = a heart item (overflow-item) is dropped for each whole heart
+  at-max-hearts: DROP_ITEM
+  overflow-item: small_heart
+  # Players that are already eliminated (e.g. mutual kill in the same tick) gain nothing.
+  eliminated-killers-gain: false
+  # Credit the last player who damaged the victim if they died to the environment
+  # shortly afterwards (knocked into lava/void, shot off a cliff, ...).
+  indirect-kills:
+    enabled: true
+    window-seconds: 15
+  # Broadcast every lifesteal kill to the whole server.
+  broadcast: false
+  # Ignore kills by/of NPCs (Citizens and similar plugins).
+  ignore-npcs: true
+
+# ─────────────────────────────────────────────────────────────────────────
+# Non-PvP deaths
+# ─────────────────────────────────────────────────────────────────────────
+death:
+  # Environmental / mob deaths remove hearts.
+  natural-deaths-lose-hearts: true
+  # Hearts lost for a natural death when heart-loss-by-death-cause is false
+  # or the cause is not listed below.
+  default-loss: 1.0
+  # Use the per-cause values below.
+  heart-loss-by-death-cause: true
+  # Hearts lost per cause. Mob types (BLAZE, GHAST, ...) take priority over ENTITY.
+  # Set a value to 0 to disable heart loss for that cause.
+  causes:
+    PLAYER: 1.0
+    ENTITY: 1.0
+    BLAZE: 2.0
+    GHAST: 3.0
+    WARDEN: 2.0
+    WITHER: 2.0
+    ENDER_DRAGON: 2.0
+    FALL: 1.0
+    DROWNING: 1.0
+    FIRE: 1.0
+    LAVA: 2.0
+    VOID: 2.0
+    EXPLOSION: 1.0
+    PROJECTILE: 1.0
+    SUFFOCATION: 1.0
+    LIGHTNING: 1.0
+    STARVATION: 1.0
+    FREEZE: 1.0
+    MAGIC: 1.0
+    WITHER_EFFECT: 1.0
+    CONTACT: 1.0
+    CRAMMING: 1.0
+    FLY_INTO_WALL: 1.0
+    DRAGON_BREATH: 1.0
+    SONIC_BOOM: 1.0
+    KILL_COMMAND: 0.0
+    OTHER: 1.0
+  # Causes listed here never remove hearts (same effect as setting them to 0).
+  disabled-causes: []
+
+# ─────────────────────────────────────────────────────────────────────────
+# Elimination
+# ─────────────────────────────────────────────────────────────────────────
+elimination:
+  enabled: true
+  # Players whose hearts fall to or below this value are eliminated.
+  threshold: 0.0
+  # Put eliminated players into spectator mode when they are allowed on the server.
+  spectator: true
+  # Kick the player at the moment of elimination.
+  kick: true
+  # Broadcast eliminations.
+  broadcast: true
+  # Strike a harmless lightning effect where the player was eliminated.
+  lightning-effect: true
+  # Skip the death screen for eliminated players.
+  auto-respawn: true
+  # Keep eliminated players locked in spectator mode.
+  lock-gamemode: true
+  # Stop eliminated spectators from teleporting to other players via the spectator menu.
+  prevent-spectator-teleport: true
+  # Eliminated players may chat.
+  can-chat: true
+  # Commands eliminated players may still use (without the leading slash).
+  allowed-commands:
+    - lifesteal
+    - ls
+    - lifecore
+    - msg
+    - tell
+    - w
+    - r
+    - reply
+    - rules
+    - discord
+    - help
+  # Temporary bans for eliminated players (stored in LifeCore's database and
+  # enforced on login - survives restarts).
+  ban:
+    enabled: true
+    # Permanent bans are only possible when this is true AND a duration is "permanent".
+    allow-permanent: false
+    # Duration by permission. The SHORTEST duration the player qualifies for applies.
+    durations:
+      default: 24h
+      vip:
+        permission: lifecore.ban.vip
+        duration: 12h
+      mvp:
+        permission: lifecore.ban.mvp
+        duration: 6h
+    # What happens when the ban expires:
+    # REVIVE          = the player is revived automatically with revive.hearts
+    # STAY_ELIMINATED = the player may join but stays eliminated (spectator) until revived
+    on-expire: REVIVE
+  # When neither ban nor spectator applies, eliminated players are denied
+  # from joining until they are revived.
+
+# ─────────────────────────────────────────────────────────────────────────
+# Revival
+# ─────────────────────────────────────────────────────────────────────────
+revive:
+  # Hearts restored on revival.
+  hearts: 3.0
+  # Game mode restored on revival (SURVIVAL, ADVENTURE).
+  gamemode: SURVIVAL
+  # NONE, WORLD_SPAWN or BED (falls back to world spawn)
+  teleport: WORLD_SPAWN
+  # World used for WORLD_SPAWN teleports. Empty = the first world.
+  spawn-world: ""
+  heal: true
+  broadcast: true
+  # Players reviving other players with /lifesteal revive or the revive menu.
+  player-revive:
+    enabled: true
+    # Hearts the reviver pays.
+    cost-hearts: 2.0
+    # Money the reviver pays (requires Vault + an economy plugin). 0 = free.
+    money-cost: 0.0
+    cooldown: 10m
+    # The reviver must keep at least this many hearts after paying.
+    minimum-remaining-hearts: 3.0
+    # Ask for confirmation in a GUI before paying.
+    confirm: true
+
+# ─────────────────────────────────────────────────────────────────────────
+# Heart withdrawal & redemption
+# ─────────────────────────────────────────────────────────────────────────
+withdraw:
+  enabled: true
+  minimum-amount: 1.0
+  maximum-amount: 10.0
+  # The player must keep at least this many hearts after withdrawing.
+  minimum-remaining-hearts: 2.0
+  # When the inventory is full: DENY or DROP (drop at the player's feet).
+  full-inventory: DROP
+  cooldown: 3s
+
+redeem:
+  enabled: true
+  # Deny redeeming notes that would exceed the player's cap.
+  respect-maximum: true
+  # When a note would exceed the cap, redeem what fits and return a note with the rest.
+  partial-redeem: true
+
+# ─────────────────────────────────────────────────────────────────────────
+# Heart drops on player kills (in addition to kill.reward-mode)
+# Individual heart items can also define their own drop chance in items.yml.
+# ─────────────────────────────────────────────────────────────────────────
+heart-drop:
+  enabled: false
+  item: small_heart
+  # Percent chance (0-100).
+  chance: 25.0
+  amount: 1
+  # GROUND = drop at the victim, INVENTORY = give to the killer (drops if full)
+  behavior: GROUND
+  # Permission the killer needs (empty = everyone).
+  permission: ""
+  # Worlds where drops happen (empty = all worlds allowed by worlds.yml).
+  worlds: []
+  # Only drop for kills that passed the anti-exploit checks.
+  require-legit-kill: true
+
+# ─────────────────────────────────────────────────────────────────────────
+# Anti-exploit protection
+# ─────────────────────────────────────────────────────────────────────────
+anti-exploit:
+  # Block heart stealing between players connected from the same IP.
+  same-ip: true
+  # Block rewards for killing the same player again within repeated-kill-delay seconds.
+  repeated-kill: true
+  repeated-kill-delay: 300
+  # Block rewards between accounts that shared an IP within alt-window-hours.
+  # IP addresses are never stored: only salted hashes are kept in memory.
+  prevent-alt-farming: true
+  alt-window-hours: 24
+  # Limit how many rewarded kills a player can get in a short time.
+  rapid-kills:
+    enabled: true
+    max-kills: 5
+    window-seconds: 120
+  # When a kill is blocked, should the victim still lose hearts?
+  victim-loses-hearts-when-blocked: false
+  # Notify online staff (lifecore.notify) about blocked exploit attempts.
+  notify-staff: true
+  # Ignore a second death event for the same player within this window.
+  duplicate-death-window-ms: 1000
+  # Minimum delay between LifeCore commands per player (0 = off).
+  command-cooldown-ms: 400
+  # Creative players cannot use LifeCore items (prevents copied items being used).
+  block-creative-item-use: true
+
+# ─────────────────────────────────────────────────────────────────────────
+# Combat
+# ─────────────────────────────────────────────────────────────────────────
+combat:
+  # Seconds a player stays combat-tagged after PvP damage.
+  tag-duration: 15
+  # Kill players who log out while combat-tagged (the attacker receives kill credit).
+  # Disable if your combat plugin already punishes combat logging.
+  punish-combat-logging: true
+  # Ask CombatLogX / DeluxeCombat / PvPManager whether a player is in combat.
+  use-external-plugins: true
+  # Actions blocked while in combat:
+  # WITHDRAW, REDEEM, REVIVE, MENU, HEART_ITEM, SCROLL, BEACON
+  blocked-actions:
+    - WITHDRAW
+    - REDEEM
+    - REVIVE
+    - MENU
+    - BEACON
+
+# ─────────────────────────────────────────────────────────────────────────
+# Leaderboards
+# ─────────────────────────────────────────────────────────────────────────
+leaderboards:
+  enabled: true
+  # Seconds between leaderboard refreshes (async).
+  refresh-interval: 60
+  # Entries per leaderboard.
+  size: 10
+  # Hide eliminated players from the hearts leaderboard.
+  exclude-eliminated: true
+
+# ─────────────────────────────────────────────────────────────────────────
+# Item security
+# ─────────────────────────────────────────────────────────────────────────
+security:
+  # Every LifeCore item carries an HMAC signature created with the secret in
+  # data/secret.key. Forged or edited items are rejected.
+  verify-item-signatures: true
+  # Remove forged/duplicated LifeCore items from the player's inventory.
+  confiscate-invalid-items: true
+  # Log forged/duplicated item attempts to the console.
+  log-invalid-items: true
+
+# ─────────────────────────────────────────────────────────────────────────
+# Reset
+# ─────────────────────────────────────────────────────────────────────────
+reset:
+  # /lifesteal reset also clears kills, deaths and other statistics.
+  reset-statistics: true
+
+# ─────────────────────────────────────────────────────────────────────────
+# Resource pack (optional custom textures for hearts, scrolls, notes and beacons)
+# ─────────────────────────────────────────────────────────────────────────
+resource-pack:
+  # Export the bundled pack to plugins/LifeCore/resourcepack/ on startup.
+  export-on-startup: true
+  # Send the pack to players when they join.
+  send-on-join: false
+  # Public download URL of the pack. Leave empty to use the built-in host below.
+  url: ""
+  # SHA-1 of the pack (40 hex chars). Leave empty to calculate it from the exported file.
+  sha1: ""
+  required: false
+  # Tiny built-in HTTP server that serves the exported pack.
+  host:
+    enabled: false
+    port: 8163
+    # Address players use to reach this server (IP or domain).
+    public-address: "127.0.0.1"
+
+# ─────────────────────────────────────────────────────────────────────────
+# Commands
+# ─────────────────────────────────────────────────────────────────────────
+commands:
+  # Extra standalone commands mapped to /lifesteal sub-commands.
+  # Example: "withdraw: [withdraw, wd]" makes /withdraw and /wd run /lifesteal withdraw.
+  standalone-aliases:
+    withdraw:
+      - withdraw
+    redeem:
+      - redeem
+    revive: []
+    top: []
+
+# ─────────────────────────────────────────────────────────────────────────
+# Integrations (all optional - LifeCore works without any of them)
+# ─────────────────────────────────────────────────────────────────────────
+integrations:
+  placeholderapi: true
+  # Parse PlaceholderAPI placeholders inside LifeCore messages, menus and holograms.
+  parse-placeholders-in-messages: true
+  luckperms: true
+  vault: true
+  combatlogx: true
+  deluxecombat: true
+  pvpmanager: true
+  # Hologram backend for revive beacons: AUTO, NATIVE, DECENTHOLOGRAMS
+  holograms: AUTO
