@@ -536,6 +536,15 @@ To rebrand, change `pluginName`, `pluginMain` and `group` in `gradle.properties`
   commands and tab completion, invalid input, persistence across reconnects, the public API, leaderboards,
   reload, and the complete revive beacon flow (placement → target selection → countdown → offline revival).
 
+### Real-server smoke tests (CI)
+
+On every push, GitHub Actions also boots real servers with the freshly built jar: Paper 1.21.1, Paper 1.21.4,
+the latest Paper 1.21.x, the latest Paper overall (26.x), the latest Purpur 1.21.x, the latest Folia and Spigot
+1.21.11 (built with BuildTools). Each server runs LifeCore console commands (`info`, `help`, `top`, `check`,
+`give`, `debug`, `reload`), is restarted, and the job fails on any LifeCore stack trace, missing API method,
+configuration problem or unclean shutdown. The scripts are in `tools/ci/`, and the server logs are uploaded
+as workflow artifacts.
+
 ### Project structure
 
 ```

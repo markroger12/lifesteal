@@ -19,4 +19,68 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: LifeCore
-          path: build/libs/LifeCore-*.jar
+          path: |
+            build/libs/LifeCore-*.jar
+            !build/libs/*-plain.jar
+            !build/libs/*-sources.jar
+
+  # Boots real servers with the built plugin, runs console commands, restarts them and
+  # fails on any LifeCore error, missing API method or configuration problem.
+  server-test:
+    name: Server test (${{ matrix.platform }} ${{ matrix.version }})
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { platform: paper, version: "1.21.1" }
+          - { platform: paper, version: "1.21.4" }
+          - { platform: paper, version: "latest-1.21" }
+          - { platform: paper, version: "latest" }
+          - { platform: purpur, version: "latest-1.21" }
+          - { platform: folia, version: "latest" }
+          - { platform: spigot, version: "1.21.11" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            25
+            21
+      - uses: actions/download-artifact@v4
+        with:
+          name: LifeCore
+          path: artifact
+      - name: Cache Spigot build
+        if: matrix.platform == 'spigot'
+        id: spigot-cache
+        uses: actions/cache@v4
+        with:
+          path: spigot-build
+          key: spigot-${{ matrix.version }}
+      - name: Build Spigot with BuildTools
+        if: matrix.platform == 'spigot' && steps.spigot-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p buildtools spigot-build
+          cd buildtools
+          curl -fsSL -o BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+          "$JAVA_HOME_21_X64/bin/java" -jar BuildTools.jar --rev "${{ matrix.version }}" --output-dir ../spigot-build
+      - name: Run server smoke test
+        env:
+          SPIGOT_JAR: ${{ github.workspace }}/spigot-build/spigot-${{ matrix.version }}.jar
+        run: |
+          JAR=$(ls artifact/LifeCore-*.jar | grep -v -e '-plain' -e '-sources' | head -1)
+          tools/ci/server-smoke-test.sh "${{ matrix.platform }}" "${{ matrix.version }}" "$JAR"
+      - name: Upload server logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-logs-${{ matrix.platform }}-${{ matrix.version }}
+          path: |
+            server-test/*.log
+            server-test/logs/latest.log
+            server-test/plugins/LifeCore/*.yml
+          if-no-files-found: ignore
