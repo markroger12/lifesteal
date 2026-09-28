@@ -128,6 +128,13 @@ stop_server second-boot.log
 
 cat first-boot.log second-boot.log > all.log
 
+echo "::group::Server log ($PLATFORM $VERSION)"
+cat all.log
+echo "::endgroup::"
+echo "::group::Warnings and errors"
+grep -nE '(WARN|ERROR|SEVERE)\]' all.log || echo "(none)"
+echo "::endgroup::"
+
 # ---------------------------------------------------------------- assertions
 problems=0
 must() { # <extended regex> <description>
