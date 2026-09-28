@@ -1,0 +1,49 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║                        LifeCore - Storage                             ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+# Changes to this file require a server restart (they are NOT applied by
+# /lifesteal reload, to avoid dropping database connections mid-game).
+config-version: 1
+
+# SQLITE (default, zero setup), MYSQL or MARIADB
+type: SQLITE
+
+# Prefix for every LifeCore table. Useful when sharing a MySQL database.
+table-prefix: "lifecore_"
+
+sqlite:
+  # Relative to plugins/LifeCore/
+  file: "data/lifecore.db"
+
+mysql:
+  host: "localhost"
+  port: 3306
+  database: "lifecore"
+  username: "root"
+  password: ""
+  use-ssl: false
+  # Extra JDBC properties appended to the connection.
+  properties:
+    useUnicode: "true"
+    characterEncoding: "utf8"
+    serverTimezone: "UTC"
+    allowPublicKeyRetrieval: "true"
+
+pool:
+  maximum-pool-size: 8
+  minimum-idle: 2
+  connection-timeout-ms: 10000
+  max-lifetime-ms: 1800000
+  keepalive-time-ms: 0
+
+autosave:
+  # Seconds between saves of changed player data (0 disables periodic saving).
+  interval-seconds: 180
+  # Save immediately after important changes (kills, eliminations, revives, withdrawals).
+  save-on-change: true
+
+# Maximum seconds to wait for a player's data while they log in.
+load-timeout-seconds: 10
+# If data cannot be loaded, the player is denied from joining (with a friendly
+# message) instead of risking their hearts being overwritten.
+deny-login-on-load-failure: true

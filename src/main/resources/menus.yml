@@ -1,0 +1,640 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║                          LifeCore - Menus                             ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+#
+# Item keys:
+#   slot / slots   a slot number, or slots: "0-8,36-44"
+#   material, name, lore, glow, custom-model-data, amount
+#   skull-owner    for PLAYER_HEAD items, e.g. "{player}"
+#   permission     only shown to players with this permission
+#   actions        run on click (in order):
+#                    [close]  [open] <menu>  [player] <command>  [console] <command>
+#                    [message] <text>  [sound] <sound id>  [withdraw] <hearts>
+#                    [redeem]  [refresh]  [top] <hearts|kills|deaths|revives>
+#
+# Dynamic menus use "content-slots" and an "entry" template. Special item keys
+# (previous, next, back, empty, confirm, cancel, ...) have built-in behaviour and
+# can still have extra actions.
+#
+# Player placeholders: {player} {hearts} {max_hearts} {min_hearts} {hearts_bar}
+# {kills} {deaths} {kdr} {revives} {times_revived} {eliminations} {killstreak}
+# {best_killstreak} {status} {eliminated} {ban_time} {revive_time} {last_death}
+# {last_death_cause} {last_killer} {revived_by} {revived_at} {first_join} {last_seen}
+config-version: 1
+
+# ─────────────────────────────────────────────────────────────────────────
+player-menu:
+  title: "<gradient:#FF3B3B:#FF8A5B>&lLifeCore</gradient> &8» &7{player}"
+  rows: 5
+  filler:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+  items:
+    border:
+      slots: "0-8,36-39,41-43"
+      material: RED_STAINED_GLASS_PANE
+      name: " "
+    profile:
+      slot: 4
+      material: PLAYER_HEAD
+      name: "<gradient:#FF3B3B:#FF8A5B>&l{player}</gradient>"
+      lore:
+        - "&7Status: {status}"
+        - "&7Hearts: &c{hearts}❤ &8/ &c{max_hearts}❤"
+        - ""
+        - "&7Kills: &f{kills}  &7Deaths: &f{deaths}"
+        - "&7K/D: &f{kdr}  &7Streak: &f{killstreak}"
+    hearts:
+      slot: 20
+      material: RED_DYE
+      custom-model-data: 710001
+      glow: true
+      name: "&c&lYour Hearts"
+      lore:
+        - "{hearts_bar}"
+        - ""
+        - "&7Current: &c{hearts}❤"
+        - "&7Maximum: &c{max_hearts}❤"
+        - "&7Minimum: &c{min_hearts}❤"
+        - ""
+        - "&8Kill players to steal their hearts."
+    stats:
+      slot: 22
+      material: IRON_SWORD
+      name: "&6&lStatistics"
+      lore:
+        - "&7Kills: &f{kills}"
+        - "&7Deaths: &f{deaths}"
+        - "&7K/D ratio: &f{kdr}"
+        - "&7Best kill streak: &f{best_killstreak}"
+        - "&7Revives performed: &f{revives}"
+        - "&7Times revived: &f{times_revived}"
+        - "&7Hearts gained: &c{hearts_gained}❤"
+        - "&7Hearts lost: &c{hearts_lost}❤"
+        - ""
+        - "&eClick for full details"
+      actions:
+        - "[open] check-menu"
+    status:
+      slot: 24
+      material: CLOCK
+      name: "&e&lStatus"
+      lore:
+        - "&7Status: {status}"
+        - "&7Last death: &f{last_death}"
+        - "&7Cause: &f{last_death_cause}"
+        - "&7Killer: &f{last_killer}"
+    withdraw:
+      slot: 29
+      material: PAPER
+      custom-model-data: 710010
+      name: "&c&lWithdraw a Heart"
+      permission: lifecore.withdraw
+      lore:
+        - "&7Turn &c{withdraw_min}❤ &7into a tradeable"
+        - "&7heart note."
+        - ""
+        - "&eClick to withdraw"
+      actions:
+        - "[withdraw] 1"
+        - "[refresh]"
+    redeem:
+      slot: 30
+      material: WRITABLE_BOOK
+      name: "&a&lRedeem a Note"
+      permission: lifecore.redeem
+      lore:
+        - "&7Hold a heart note in your"
+        - "&7main hand and click here."
+        - ""
+        - "&eClick to redeem"
+      actions:
+        - "[redeem]"
+        - "[refresh]"
+    revive:
+      slot: 32
+      material: TOTEM_OF_UNDYING
+      name: "&b&lRevive a Player"
+      permission: lifecore.revive
+      lore:
+        - "&7Bring an eliminated player back."
+        - "&7Cost: &c{revive_cost}❤"
+        - ""
+        - "&8Tip: Revive Beacons revive for free!"
+        - ""
+        - "&eClick to choose a player"
+      actions:
+        - "[open] revive-menu"
+    leaderboard:
+      slot: 33
+      material: GOLDEN_HELMET
+      name: "&6&lLeaderboards"
+      permission: lifecore.top
+      lore:
+        - "&7See who rules the server."
+        - ""
+        - "&eClick to open"
+      actions:
+        - "[open] leaderboard-menu"
+    close:
+      slot: 40
+      material: BARRIER
+      name: "&cClose"
+      actions:
+        - "[close]"
+    admin:
+      slot: 44
+      material: COMMAND_BLOCK
+      name: "&4&lAdmin Panel"
+      permission: lifecore.admin.menu
+      lore:
+        - "&eClick to open"
+      actions:
+        - "[open] admin-menu"
+
+# ─────────────────────────────────────────────────────────────────────────
+revive-menu:
+  title: "&b&lRevive &8» &7Page {page}/{pages}"
+  rows: 6
+  filler:
+    enabled: true
+    material: GRAY_STAINED_GLASS_PANE
+    name: " "
+  content-slots: "10-16,19-25,28-34,37-43"
+  entry:
+    material: PLAYER_HEAD
+    name: "&c{target}"
+    lore:
+      - "&7Eliminated &f{eliminated_ago} &7ago"
+      - "&7Cause: &f{cause}"
+      - "&7Ban remaining: &f{ban_time}"
+      - ""
+      - "&7Cost: &c{cost}❤"
+      - ""
+      - "&eClick to revive"
+  items:
+    info:
+      slot: 4
+      material: TOTEM_OF_UNDYING
+      name: "&b&lEliminated Players"
+      lore:
+        - "&7{count} player(s) waiting for a revive."
+        - "&7Reviving costs &c{cost}❤&7."
+    empty:
+      slot: 22
+      material: LIME_DYE
+      name: "&aNobody is eliminated!"
+    previous:
+      slot: 45
+      material: ARROW
+      name: "&7« Previous page"
+    next:
+      slot: 53
+      material: ARROW
+      name: "&7Next page »"
+    back:
+      slot: 49
+      material: OAK_DOOR
+      name: "&7Back"
+      actions:
+        - "[open] player-menu"
+
+# ─────────────────────────────────────────────────────────────────────────
+leaderboard-menu:
+  title: "&6&lTop {type} &8» &7{page}/{pages}"
+  rows: 6
+  filler:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+  content-slots: "19-25,28-34,37-43"
+  entry:
+    material: PLAYER_HEAD
+    name: "&6#{position} &f{name}"
+    lore:
+      - "&7{type}: &c{value}"
+  items:
+    hearts:
+      slot: 1
+      material: RED_DYE
+      name: "&c&lHearts"
+      lore:
+        - "&eClick to view"
+    kills:
+      slot: 3
+      material: IRON_SWORD
+      name: "&6&lKills"
+      lore:
+        - "&eClick to view"
+    deaths:
+      slot: 5
+      material: SKELETON_SKULL
+      name: "&7&lDeaths"
+      lore:
+        - "&eClick to view"
+    revives:
+      slot: 7
+      material: TOTEM_OF_UNDYING
+      name: "&b&lRevives"
+      lore:
+        - "&eClick to view"
+    empty:
+      slot: 31
+      material: PAPER
+      name: "&7No entries yet"
+    previous:
+      slot: 45
+      material: ARROW
+      name: "&7« Previous page"
+    next:
+      slot: 53
+      material: ARROW
+      name: "&7Next page »"
+    back:
+      slot: 49
+      material: OAK_DOOR
+      name: "&7Back"
+      actions:
+        - "[open] player-menu"
+
+# ─────────────────────────────────────────────────────────────────────────
+check-menu:
+  title: "&c&l{player} &8» &7Profile"
+  rows: 5
+  filler:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+  items:
+    profile:
+      slot: 4
+      material: PLAYER_HEAD
+      name: "<gradient:#FF3B3B:#FF8A5B>&l{player}</gradient>"
+      lore:
+        - "&7Status: {status}"
+        - "&7Last seen: &f{last_seen}"
+        - "&7First join: &f{first_join}"
+    hearts:
+      slot: 20
+      material: RED_DYE
+      glow: true
+      name: "&c&lHearts"
+      lore:
+        - "{hearts_bar}"
+        - ""
+        - "&7Current: &c{hearts}❤"
+        - "&7Maximum: &c{max_hearts}❤"
+        - "&7Minimum: &c{min_hearts}❤"
+    combat:
+      slot: 22
+      material: DIAMOND_SWORD
+      name: "&6&lCombat"
+      lore:
+        - "&7Kills: &f{kills}"
+        - "&7Deaths: &f{deaths}"
+        - "&7K/D: &f{kdr}"
+        - "&7Kill streak: &f{killstreak} &8(best {best_killstreak})"
+    elimination:
+      slot: 24
+      material: WITHER_SKELETON_SKULL
+      name: "&4&lElimination"
+      lore:
+        - "&7Eliminated: {eliminated}"
+        - "&7Eliminations: &f{eliminations}"
+        - "&7Eliminated at: &f{eliminated_at}"
+        - "&7Cause: &f{elimination_cause}"
+        - "&7Ban remaining: &f{ban_time}"
+    death:
+      slot: 30
+      material: BONE
+      name: "&7&lLast Death"
+      lore:
+        - "&7When: &f{last_death} &8({last_death_ago} ago)"
+        - "&7Cause: &f{last_death_cause}"
+        - "&7Killer: &f{last_killer}"
+    revival:
+      slot: 32
+      material: TOTEM_OF_UNDYING
+      name: "&b&lRevival"
+      lore:
+        - "&7Times revived: &f{times_revived}"
+        - "&7Last revived: &f{revived_at}"
+        - "&7Revived by: &f{revived_by}"
+        - "&7Revives performed: &f{revives}"
+        - "&7Active revive beacon: &f{revive_time}"
+    close:
+      slot: 40
+      material: BARRIER
+      name: "&cClose"
+      actions:
+        - "[close]"
+
+# ─────────────────────────────────────────────────────────────────────────
+beacon-target-menu:
+  title: "&b&lChoose a player to revive"
+  rows: 6
+  filler:
+    enabled: true
+    material: LIGHT_BLUE_STAINED_GLASS_PANE
+    name: " "
+  content-slots: "10-16,19-25,28-34,37-43"
+  entry:
+    material: PLAYER_HEAD
+    name: "&b{target}"
+    lore:
+      - "&7Eliminated &f{eliminated_ago} &7ago"
+      - "&7Cause: &f{cause}"
+      - ""
+      - "&7Ritual: {tier} &8| &e{duration}"
+      - ""
+      - "&eClick to start the revival"
+  items:
+    info:
+      slot: 4
+      material: BEACON
+      glow: true
+      name: "&b&lRevive Beacon &7({tier}&7)"
+      lore:
+        - "&7Pick the player you want to revive."
+        - "&7Close this menu to take your beacon back."
+    previous:
+      slot: 45
+      material: ARROW
+      name: "&7« Previous page"
+    next:
+      slot: 53
+      material: ARROW
+      name: "&7Next page »"
+    cancel:
+      slot: 49
+      material: BARRIER
+      name: "&cCancel"
+      actions:
+        - "[close]"
+
+# ─────────────────────────────────────────────────────────────────────────
+confirm-menu:
+  title: "&8Confirm: &f{action}"
+  rows: 3
+  filler:
+    enabled: true
+    material: GRAY_STAINED_GLASS_PANE
+    name: " "
+  items:
+    info:
+      slot: 13
+      material: PAPER
+      name: "&f{action}"
+      lore:
+        - "&7Are you sure?"
+    confirm:
+      slots: "10-12"
+      material: LIME_STAINED_GLASS_PANE
+      name: "&a&lConfirm"
+    cancel:
+      slots: "14-16"
+      material: RED_STAINED_GLASS_PANE
+      name: "&c&lCancel"
+
+# ─────────────────────────────────────────────────────────────────────────
+admin-menu:
+  title: "&4&lAdmin &8» &7Players {page}/{pages}"
+  rows: 6
+  filler:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+  content-slots: "10-16,19-25,28-34"
+  entry:
+    material: PLAYER_HEAD
+    name: "&f{player}"
+    lore:
+      - "&7Hearts: &c{hearts}❤ &8/ &c{max_hearts}❤"
+      - "&7Status: {status}"
+      - "&7K/D: &f{kills}&8/&f{deaths}"
+      - ""
+      - "&eClick to manage"
+  items:
+    info:
+      slot: 4
+      material: COMMAND_BLOCK
+      name: "&4&lLifeCore Admin"
+      lore:
+        - "&7Online: &f{online}"
+        - "&7Cached players: &f{cached}"
+        - "&7Active beacons: &f{beacons}"
+    empty:
+      slot: 22
+      material: PAPER
+      name: "&7No players online"
+    search:
+      slot: 46
+      material: COMPASS
+      name: "&e&lSearch Player"
+      lore:
+        - "&7Manage any player, online or offline."
+        - "&eClick and type a name in chat"
+    items:
+      slot: 47
+      material: CHEST
+      name: "&6&lItems"
+      lore:
+        - "&7Take heart items, scrolls,"
+        - "&7beacons and heart notes."
+    beacons:
+      slot: 48
+      material: BEACON
+      name: "&b&lActive Beacons"
+      lore:
+        - "&7{beacons} beacon(s) active."
+    eliminated:
+      slot: 50
+      material: WITHER_SKELETON_SKULL
+      name: "&c&lEliminated Players"
+      lore:
+        - "&7Revive eliminated players for free."
+    reload:
+      slot: 51
+      material: REPEATER
+      name: "&a&lReload Configuration"
+      lore:
+        - "&7Reloads messages, items, menus,"
+        - "&7sounds, worlds and settings."
+    previous:
+      slot: 45
+      material: ARROW
+      name: "&7« Previous page"
+    next:
+      slot: 53
+      material: ARROW
+      name: "&7Next page »"
+    close:
+      slot: 49
+      material: BARRIER
+      name: "&cClose"
+      actions:
+        - "[close]"
+
+# ─────────────────────────────────────────────────────────────────────────
+admin-player-menu:
+  title: "&4&lManage &8» &f{player}"
+  rows: 6
+  filler:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+  items:
+    profile:
+      slot: 4
+      material: PLAYER_HEAD
+      name: "&f&l{player}"
+      lore:
+        - "&7Hearts: &c{hearts}❤ &8/ &c{max_hearts}❤"
+        - "{hearts_bar}"
+        - "&7Status: {status}"
+        - "&7Ban remaining: &f{ban_time}"
+        - "&7Kills: &f{kills} &8| &7Deaths: &f{deaths}"
+        - "&7Last seen: &f{last_seen}"
+    remove-heart:
+      slot: 19
+      material: RED_CONCRETE
+      name: "&c-1 ❤"
+    remove-half:
+      slot: 20
+      material: RED_STAINED_GLASS
+      name: "&c-0.5 ❤"
+    set-hearts:
+      slot: 21
+      material: NAME_TAG
+      name: "&e&lSet Hearts"
+      lore:
+        - "&eClick and type the amount in chat"
+    hearts:
+      slot: 22
+      material: RED_DYE
+      glow: true
+      name: "&c{hearts}❤"
+      lore:
+        - "&7Maximum: &c{max_hearts}❤"
+    set-max:
+      slot: 23
+      material: GOLDEN_APPLE
+      name: "&6&lSet Maximum Hearts"
+      lore:
+        - "&7Current maximum: &c{max_hearts}❤"
+        - "&eClick and type the amount in chat"
+    add-half:
+      slot: 24
+      material: LIME_STAINED_GLASS
+      name: "&a+0.5 ❤"
+    add-heart:
+      slot: 25
+      material: LIME_CONCRETE
+      name: "&a+1 ❤"
+    eliminate:
+      slot: 29
+      material: WITHER_SKELETON_SKULL
+      name: "&4&lEliminate"
+      lore:
+        - "&7Eliminate this player immediately."
+    revive:
+      slot: 31
+      material: TOTEM_OF_UNDYING
+      name: "&b&lRevive"
+      lore:
+        - "&7Revive this player (if eliminated)."
+    reset:
+      slot: 33
+      material: TNT
+      name: "&c&lReset Player"
+      lore:
+        - "&7Restore starting hearts and"
+        - "&7clear elimination and statistics."
+    stats:
+      slot: 40
+      material: BOOK
+      name: "&e&lView Statistics"
+    back:
+      slot: 49
+      material: OAK_DOOR
+      name: "&7Back"
+
+# ─────────────────────────────────────────────────────────────────────────
+admin-items-menu:
+  title: "&6&lLifeCore Items &8» &7{page}/{pages}"
+  rows: 6
+  filler:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+  content-slots: "10-16,19-25,28-34,37-43"
+  entry:
+    material: STONE
+    lore:
+      - ""
+      - "&8ID: {id}"
+      - "&eLeft-click: &fget 1"
+      - "&eShift-click: &fget 16"
+  items:
+    note:
+      slot: 50
+      material: PAPER
+      custom-model-data: 710010
+      name: "&c&lHeart Note"
+      lore:
+        - "&7Create a heart note of any value."
+        - "&eClick and type the hearts in chat"
+    previous:
+      slot: 45
+      material: ARROW
+      name: "&7« Previous page"
+    next:
+      slot: 53
+      material: ARROW
+      name: "&7Next page »"
+    back:
+      slot: 49
+      material: OAK_DOOR
+      name: "&7Back"
+
+# ─────────────────────────────────────────────────────────────────────────
+admin-beacons-menu:
+  title: "&b&lActive Beacons &8» &7{page}/{pages}"
+  rows: 6
+  filler:
+    enabled: true
+    material: BLACK_STAINED_GLASS_PANE
+    name: " "
+  content-slots: "10-16,19-25,28-34,37-43"
+  entry:
+    material: BEACON
+    name: "{tier} &7beacon &8({id})"
+    lore:
+      - "&7Owner: &f{owner}"
+      - "&7Reviving: &f{target}"
+      - "&7Time left: &e{time}"
+      - "&7Durability: {durability_color}{durability}%"
+      - "&7State: {status}"
+      - "&7Location: &f{location}"
+      - ""
+      - "&eLeft-click: &fteleport"
+      - "&eRight-click: &fcancel (refund)"
+      - "&eShift + right-click: &fcancel (no refund)"
+  items:
+    empty:
+      slot: 22
+      material: PAPER
+      name: "&7No active beacons"
+    previous:
+      slot: 45
+      material: ARROW
+      name: "&7« Previous page"
+    next:
+      slot: 53
+      material: ARROW
+      name: "&7Next page »"
+    back:
+      slot: 49
+      material: OAK_DOOR
+      name: "&7Back"

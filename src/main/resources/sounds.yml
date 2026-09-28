@@ -1,0 +1,110 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║                        LifeCore - Sounds                              ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+# sound: a namespaced sound key (entity.player.levelup, minecraft:block.beacon.activate)
+#        legacy enum names (ENTITY_PLAYER_LEVELUP) or custom resource-pack sounds.
+# Set enabled: false to mute a single sound.
+config-version: 1
+
+sounds:
+  heart-gain:
+    enabled: true
+    sound: entity.player.levelup
+    volume: 0.8
+    pitch: 1.6
+  heart-loss:
+    enabled: true
+    sound: entity.player.hurt_on_fire
+    volume: 0.8
+    pitch: 0.8
+  kill:
+    enabled: true
+    sound: entity.experience_orb.pickup
+    volume: 1.0
+    pitch: 0.9
+  eliminated:
+    enabled: true
+    sound: entity.wither.death
+    volume: 0.7
+    pitch: 1.2
+  # Played to every online player when someone is eliminated.
+  eliminated-broadcast:
+    enabled: true
+    sound: entity.lightning_bolt.thunder
+    volume: 0.5
+    pitch: 1.0
+  revived:
+    enabled: true
+    sound: item.totem.use
+    volume: 0.8
+    pitch: 1.0
+  revived-broadcast:
+    enabled: true
+    sound: block.beacon.power_select
+    volume: 0.6
+    pitch: 1.3
+  beacon-activate:
+    enabled: true
+    sound: block.beacon.activate
+    volume: 1.0
+    pitch: 1.0
+  beacon-tick:
+    enabled: true
+    sound: block.note_block.chime
+    volume: 0.4
+    pitch: 1.8
+  beacon-damaged:
+    enabled: true
+    sound: block.anvil.land
+    volume: 0.6
+    pitch: 1.4
+  beacon-complete:
+    enabled: true
+    sound: ui.toast.challenge_complete
+    volume: 1.0
+    pitch: 1.0
+  beacon-fail:
+    enabled: true
+    sound: block.beacon.deactivate
+    volume: 1.0
+    pitch: 0.8
+  heart-consume:
+    enabled: true
+    sound: entity.generic.drink
+    volume: 1.0
+    pitch: 1.3
+  scroll-consume:
+    enabled: true
+    sound: item.book.page_turn
+    volume: 1.0
+    pitch: 0.7
+  withdraw:
+    enabled: true
+    sound: entity.item.pickup
+    volume: 1.0
+    pitch: 0.8
+  redeem:
+    enabled: true
+    sound: entity.player.levelup
+    volume: 0.8
+    pitch: 2.0
+  error:
+    enabled: true
+    sound: entity.villager.no
+    volume: 0.8
+    pitch: 1.0
+  menu-open:
+    enabled: true
+    sound: block.chest.open
+    volume: 0.5
+    pitch: 1.4
+  menu-click:
+    enabled: true
+    sound: ui.button.click
+    volume: 0.5
+    pitch: 1.2
+  success:
+    enabled: true
+    sound: entity.experience_orb.pickup
+    volume: 0.7
+    pitch: 1.4

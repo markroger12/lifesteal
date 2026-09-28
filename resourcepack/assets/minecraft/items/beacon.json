@@ -1,0 +1,41 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:block/beacon"
+    },
+    "entries": [
+      {
+        "threshold": 710030,
+        "model": {
+          "type": "minecraft:model",
+          "model": "lifecore:item/beacon_basic"
+        }
+      },
+      {
+        "threshold": 710031,
+        "model": {
+          "type": "minecraft:model",
+          "model": "lifecore:item/beacon_advanced"
+        }
+      },
+      {
+        "threshold": 710032,
+        "model": {
+          "type": "minecraft:model",
+          "model": "lifecore:item/beacon_ultimate"
+        }
+      },
+      {
+        "threshold": 710033,
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:block/beacon"
+        }
+      }
+    ]
+  }
+}

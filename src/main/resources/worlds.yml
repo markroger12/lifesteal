@@ -1,0 +1,47 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║                        LifeCore - World Rules                         ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+# Every world uses the "default" rules unless it has its own entry under
+# "worlds". A world entry only needs the keys it changes.
+config-version: 1
+
+default:
+  # Master switch: when false, LifeCore does nothing in this world.
+  enabled: true
+  # Safe worlds: players never gain or lose hearts here (statistics still count).
+  safe: false
+  # Non-PvP deaths remove hearts.
+  heart-loss: true
+  # PvP kills transfer hearts.
+  player-kills: true
+  # Killers gain hearts from kills.
+  heart-gain: true
+  # Deaths caused by mobs remove hearts.
+  mob-loss: true
+  # Players can be eliminated in this world.
+  elimination: true
+  # Any death eliminates the player instantly (hardcore worlds).
+  instant-elimination: false
+  # Heart items drop on kills.
+  heart-drops: true
+  # Heart items, scrolls and notes can be used.
+  items: true
+  # Revive beacons can be placed.
+  beacons: true
+  # Optional numeric overrides (-1 = use config.yml).
+  killer-gain: -1
+  victim-loss: -1
+  natural-loss-multiplier: 1.0
+
+# Convenience lists (applied on top of the per-world entries below).
+disabled-worlds: []
+safe-worlds: []
+no-heart-loss-worlds: []
+instant-elimination-worlds: []
+
+worlds:
+  world_the_end:
+    natural-loss-multiplier: 1.0
+  # Example lobby / hub world where nothing happens:
+  lobby:
+    enabled: false

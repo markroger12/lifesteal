@@ -1,0 +1,230 @@
+# ╔══════════════════════════════════════════════════════════════════════╗
+# ║                      LifeCore - Revive Beacons                        ║
+# ╚══════════════════════════════════════════════════════════════════════╝
+#
+# Place a revive beacon, choose an eliminated player and defend the beacon
+# until the countdown ends. Active beacons are saved to the database and
+# resume after restarts.
+config-version: 1
+
+settings:
+  enabled: true
+  # Maximum active beacons per player at the same time.
+  max-active-per-player: 1
+  # The owner may break their own beacon to cancel the revival.
+  owner-can-cancel: true
+  # Return the beacon item when the owner cancels.
+  refund-on-cancel: true
+  # Return the beacon item if the target selection menu is closed.
+  refund-on-close: true
+  # Crafted beacons must be crafted one at a time (each gets a unique id).
+  block-shift-crafting: true
+  # Pause the countdown while the owner is outside the tier's activation radius.
+  require-owner-nearby: true
+  # Seconds between saving the countdown of active beacons.
+  save-interval: 10
+  # Hologram & particle refresh interval in ticks (20 = 1 second).
+  visual-update-ticks: 20
+  # Play the tick sound every N seconds (0 = off).
+  tick-sound-interval: 5
+
+# Default hologram (tiers may override). Placeholders:
+# {tier} {target} {owner} {time} {durability} {durability_color} {progress_bar} {status}
+hologram:
+  enabled: true
+  height: 2.4
+  lines:
+    - "&#FFD166&l✦ REVIVE BEACON ✦ &7({tier}&7)"
+    - "&7Reviving: &f{target}"
+    - "&7Time Remaining: &e{time}"
+    - "&7Durability: {durability_color}{durability}%"
+    - "{progress_bar}"
+    - "{status}"
+  progress-bar:
+    length: 20
+    symbol: "|"
+    complete-color: "&a"
+    remaining-color: "&8"
+  durability-colors:
+    high: "&a"
+    medium: "&e"
+    low: "&c"
+
+tiers:
+  basic:
+    enabled: true
+    display-name: "&bBasic"
+    # Block placed in the world while the revival runs.
+    block: BEACON
+    # Seconds until the target is revived.
+    duration: 300
+    # Hit points of the beacon. Enemy break attempts and explosions reduce it.
+    durability: 100
+    damage-per-hit: 20
+    explosion-damage: 50
+    # Seconds before the same player can start another beacon of this tier.
+    cooldown: 900
+    # The owner must stay within this many blocks (0 = no limit).
+    activation-radius: 16
+    # Hearts restored to the revived player (-1 = revive.hearts from config.yml).
+    revive-hearts: -1
+    permission: ""
+    particle: beacon-basic
+    sounds:
+      start: beacon-activate
+      tick: beacon-tick
+      damaged: beacon-damaged
+      complete: beacon-complete
+      fail: beacon-fail
+    # Console commands. Placeholders: {owner} {target} {tier} {x} {y} {z} {world}
+    commands:
+      start: []
+      complete: []
+      fail: []
+    broadcast:
+      start: true
+      complete: true
+      fail: true
+    item:
+      material: BEACON
+      name: "<gradient:#00C6FF:#0072FF>&lBasic Revive Beacon</gradient>"
+      lore:
+        - "&7Bring a fallen ally back to life."
+        - ""
+        - "&8» &7Revival time: &f{duration}"
+        - "&8» &7Durability: &f{durability}"
+        - ""
+        - "&#9AD8FFPlace to choose a player to revive"
+      custom-model-data: 710030
+      item-model: ""
+      glow: true
+      enchantments: []
+      flags:
+        - HIDE_ENCHANTS
+        - HIDE_ATTRIBUTES
+    recipe:
+      enabled: true
+      type: SHAPED
+      permission: ""
+      shape:
+        - "DTD"
+        - "TBT"
+        - "DTD"
+      ingredients:
+        D: DIAMOND_BLOCK
+        T: TOTEM_OF_UNDYING
+        B: BEACON
+
+  advanced:
+    enabled: true
+    display-name: "&6Advanced"
+    block: BEACON
+    duration: 180
+    durability: 200
+    damage-per-hit: 20
+    explosion-damage: 40
+    cooldown: 600
+    activation-radius: 24
+    revive-hearts: 5.0
+    permission: ""
+    particle: beacon-advanced
+    sounds:
+      start: beacon-activate
+      tick: beacon-tick
+      damaged: beacon-damaged
+      complete: beacon-complete
+      fail: beacon-fail
+    commands:
+      start: []
+      complete: []
+      fail: []
+    broadcast:
+      start: true
+      complete: true
+      fail: true
+    item:
+      material: BEACON
+      name: "<gradient:#F7971E:#FFD200>&lAdvanced Revive Beacon</gradient>"
+      lore:
+        - "&7A sturdier beacon with a faster ritual."
+        - ""
+        - "&8» &7Revival time: &f{duration}"
+        - "&8» &7Durability: &f{durability}"
+        - ""
+        - "&#FFE08APlace to choose a player to revive"
+      custom-model-data: 710031
+      item-model: ""
+      glow: true
+      enchantments: []
+      flags:
+        - HIDE_ENCHANTS
+        - HIDE_ATTRIBUTES
+    recipe:
+      enabled: true
+      type: SHAPED
+      permission: ""
+      shape:
+        - "NLN"
+        - "LBL"
+        - "NLN"
+      ingredients:
+        N: NETHERITE_INGOT
+        L: "lifecore:large_heart"
+        B: "lifecore:beacon:basic"
+
+  ultimate:
+    enabled: true
+    display-name: "&dUltimate"
+    block: BEACON
+    duration: 60
+    durability: 400
+    damage-per-hit: 20
+    explosion-damage: 25
+    cooldown: 300
+    activation-radius: 0
+    revive-hearts: 10.0
+    permission: ""
+    particle: beacon-ultimate
+    sounds:
+      start: beacon-activate
+      tick: beacon-tick
+      damaged: beacon-damaged
+      complete: beacon-complete
+      fail: beacon-fail
+    commands:
+      start: []
+      complete: []
+      fail: []
+    broadcast:
+      start: true
+      complete: true
+      fail: true
+    item:
+      material: BEACON
+      name: "<gradient:#DA22FF:#9733EE:#FF4B2B>&lUltimate Revive Beacon</gradient>"
+      lore:
+        - "&7Defies death itself."
+        - ""
+        - "&8» &7Revival time: &f{duration}"
+        - "&8» &7Durability: &f{durability}"
+        - ""
+        - "&#E3A6FFPlace to choose a player to revive"
+      custom-model-data: 710032
+      item-model: ""
+      glow: true
+      enchantments: []
+      flags:
+        - HIDE_ENCHANTS
+        - HIDE_ATTRIBUTES
+    recipe:
+      enabled: true
+      type: SHAPED
+      permission: ""
+      shape:
+        - "HNH"
+        - "NBN"
+        - "HNH"
+      ingredients:
+        H: "lifecore:legendary_heart"
+        N: NETHER_STAR
+        B: "lifecore:beacon:advanced"

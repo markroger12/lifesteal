@@ -1,0 +1,55 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/paper"
+    },
+    "entries": [
+      {
+        "threshold": 710010,
+        "model": {
+          "type": "minecraft:model",
+          "model": "lifecore:item/heart_note"
+        }
+      },
+      {
+        "threshold": 710011,
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/paper"
+        }
+      },
+      {
+        "threshold": 710020,
+        "model": {
+          "type": "minecraft:model",
+          "model": "lifecore:item/sacrificial_scroll"
+        }
+      },
+      {
+        "threshold": 710021,
+        "model": {
+          "type": "minecraft:model",
+          "model": "lifecore:item/blood_pact"
+        }
+      },
+      {
+        "threshold": 710022,
+        "model": {
+          "type": "minecraft:model",
+          "model": "lifecore:item/soul_contract"
+        }
+      },
+      {
+        "threshold": 710023,
+        "model": {
+          "type": "minecraft:model",
+          "model": "minecraft:item/paper"
+        }
+      }
+    ]
+  }
+}

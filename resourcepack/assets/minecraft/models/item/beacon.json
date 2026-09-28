@@ -1,0 +1,23 @@
+{
+  "parent": "minecraft:block/beacon",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 710030
+      },
+      "model": "lifecore:item/beacon_basic"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 710031
+      },
+      "model": "lifecore:item/beacon_advanced"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 710032
+      },
+      "model": "lifecore:item/beacon_ultimate"
+    }
+  ]
+}
