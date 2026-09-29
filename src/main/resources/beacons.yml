@@ -97,6 +97,7 @@ tiers:
         - "&#9AD8FFPlace to choose a player to revive"
       custom-model-data: 710030
       item-model: ""
+      head-texture: ""
       glow: true
       enchantments: []
       flags:
@@ -154,6 +155,7 @@ tiers:
         - "&#FFE08APlace to choose a player to revive"
       custom-model-data: 710031
       item-model: ""
+      head-texture: ""
       glow: true
       enchantments: []
       flags:
@@ -211,6 +213,7 @@ tiers:
         - "&#E3A6FFPlace to choose a player to revive"
       custom-model-data: 710032
       item-model: ""
+      head-texture: ""
       glow: true
       enchantments: []
       flags:

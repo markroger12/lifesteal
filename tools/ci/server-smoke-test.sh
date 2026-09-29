@@ -121,6 +121,11 @@ sleep 5
 stop_server first-boot.log
 
 # ---------------------------------------------------------------- second boot (restart path)
+# Turn the small heart into a custom head so the skin code runs on this server; a rejected
+# skin is reported as a configuration problem, which fails the checks below.
+sed -i '0,/head-texture: ""/s||head-texture: "http://textures.minecraft.net/texture/5a9c0f3e7b21d4c8a6e0f1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f6"|' \
+    plugins/LifeCore/items.yml
+grep -q 'head-texture: "http' plugins/LifeCore/items.yml || fail "could not set a head texture in items.yml"
 start_server second-boot.log
 send "lifesteal info"
 sleep 5

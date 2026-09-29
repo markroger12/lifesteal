@@ -437,6 +437,23 @@ the heart note and three beacon tiers. It's exported to `plugins/LifeCore/resour
 To regenerate or tweak the art, edit and run `python3 tools/generate_resourcepack.py` (standard library only),
 then rebuild.
 
+### Custom heads (no resource pack)
+
+Any LifeCore item (hearts, scrolls, the heart note, beacons) can be a player head with a custom skin instead.
+Players see it without installing anything. Copy a head's texture **Value** (the long `eyJ0...` text) or its
+`textures.minecraft.net` URL from a head website and paste it into the item's `head-texture`:
+
+```yaml
+heart-items:
+  small_heart:
+    item:
+      head-texture: "paste the head's Value (eyJ0...) or textures.minecraft.net URL here"
+```
+
+When `head-texture` is set, `material` is ignored. The head can't be placed as a block, and
+hearts made at different times still stack. A whole `/give` command is accepted too; LifeCore finds the texture
+inside it. If the value contains no texture, a configuration problem is logged and the item keeps its material.
+
 ---
 
 ## Developer API
@@ -599,6 +616,7 @@ per-world `heart-gain` / `heart-loss` / `safe`.
 **Does it work with my combat plugin?** Yes. CombatLogX, DeluxeCombat and PvPManager are detected automatically. Set
 `combat.punish-combat-logging: false` if your combat plugin already kills combat loggers.
 
-**Can I use my own item textures?** Set `custom-model-data` or `item-model` on any item, beacon or scroll.
+**Can I use my own item textures?** Set `custom-model-data` or `item-model` on any item, beacon or scroll, or
+use a custom player head with `head-texture` (see [Custom heads](#custom-heads-no-resource-pack)).
 
 **Can I rename the plugin?** Yes. See [Building from source](#building-from-source).

@@ -189,6 +189,7 @@ scrolls:
         - "&#FF7A7ARight-click to sacrifice"
       custom-model-data: 710020
       item-model: ""
+      head-texture: ""
       glow: true
       enchantments: []
       flags:
@@ -237,6 +238,7 @@ scrolls:
         - "&#FF5C5CRight-click to sacrifice"
       custom-model-data: 710021
       item-model: ""
+      head-texture: ""
       glow: true
       enchantments: []
       flags:
@@ -286,6 +288,7 @@ scrolls:
         - "&#E58EFFRight-click to sacrifice"
       custom-model-data: 710022
       item-model: ""
+      head-texture: ""
       glow: true
       enchantments: []
       flags:

@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -356,6 +357,35 @@ class LifeCoreIntegrationTest {
         plugin.heartItems().use(player, EquipmentSlot.HAND, player.getInventory().getItemInMainHand(), identity);
         assertEquals(20.0, data(player).getHearts());
         assertEquals(1, player.getInventory().getItemInMainHand().getAmount(), "denied at max hearts - item kept");
+    }
+
+    @Test
+    void headTextureTurnsHeartItemsIntoCustomHeads() throws Exception {
+        String hash = "5a9c0f3e7b21d4c8a6e0f1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e5f6";
+        editConfig("items.yml", "heart-items.small_heart.item.head-texture", "http://textures.minecraft.net/texture/" + hash);
+        plugin.reloadAll(server.getConsoleSender());
+
+        ItemStack first = plugin.items().create("small_heart", 1).orElseThrow();
+        ItemStack second = plugin.items().create("small_heart", 1).orElseThrow();
+        assertEquals(Material.PLAYER_HEAD, first.getType());
+        com.destroystokyo.paper.profile.PlayerProfile profile = ((SkullMeta) first.getItemMeta()).getPlayerProfile();
+        assertNotNull(profile);
+        String value = profile.getProperties().stream().filter(p -> p.getName().equals("textures"))
+                .map(com.destroystokyo.paper.profile.ProfileProperty::getValue).findFirst().orElseThrow();
+        assertTrue(new String(java.util.Base64.getDecoder().decode(value)).contains(hash));
+        assertTrue(first.isSimilar(second), "hearts made at different times still stack");
+
+        PlayerMock player = join("HeadEater");
+        player.getInventory().setItemInMainHand(first);
+        ItemIdentity identity = plugin.items().identify(first).orElseThrow();
+        assertTrue(identity.valid());
+        plugin.heartItems().use(player, EquipmentSlot.HAND, player.getInventory().getItemInMainHand(), identity);
+        assertEquals(11.0, data(player).getHearts());
+
+        editConfig("items.yml", "heart-items.small_heart.item.head-texture", "not a texture");
+        plugin.reloadAll(server.getConsoleSender());
+        assertEquals(Material.RED_DYE, plugin.items().create("small_heart", 1).orElseThrow().getType(),
+                "an unusable texture falls back to the configured material");
     }
 
     @Test
